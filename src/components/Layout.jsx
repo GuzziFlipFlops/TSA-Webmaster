@@ -32,7 +32,7 @@ function activeClass({ isActive }) {
 
 function DesktopNav() {
   return (
-    <nav className="hidden min-w-0 items-center gap-1 xl:flex" aria-label="Primary navigation">
+    <nav className="hidden min-w-0 flex-1 items-center justify-center gap-1 xl:flex" aria-label="Primary navigation">
       <NavLink to="/" className={activeClass} end>
         Home
       </NavLink>
@@ -98,7 +98,7 @@ export default function Layout() {
             <span className="flex h-9 w-9 shrink-0 items-center justify-center rounded-md bg-ink text-white shadow-sm">
               <Icon name="Compass" className="h-5 w-5" />
             </span>
-            <span className="min-w-0 leading-tight">
+            <span className="min-w-0 max-w-[190px] leading-tight">
               <span className="block truncate text-sm font-black sm:text-base">{siteConfig.siteName}</span>
               <span className="hidden truncate text-[0.66rem] font-bold uppercase tracking-[0.14em] text-harbor lg:block">
                 {siteConfig.subtitle}
@@ -106,7 +106,7 @@ export default function Layout() {
             </span>
           </Link>
           <DesktopNav />
-          <div className="flex items-center gap-2">
+          <div className="flex shrink-0 items-center gap-2">
             <AccessibilityToolbar compact />
             <button
               type="button"

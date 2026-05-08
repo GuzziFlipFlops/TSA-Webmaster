@@ -2,6 +2,7 @@ import { useEffect, useRef, useState } from "react";
 import Icon from "./Icon.jsx";
 
 const modes = {
+  theme: ["light", "dark"],
   textSize: ["normal", "large"],
   contrast: ["normal", "high"],
   motion: ["normal", "reduced"]
@@ -14,13 +15,14 @@ export default function AccessibilityToolbar({ compact = false }) {
   const menuRef = useRef(null);
   const [prefs, setPrefs] = useState(() => {
     try {
-      return { textSize: "normal", contrast: "normal", motion: "normal", ...JSON.parse(localStorage.getItem(storageKey) ?? "{}") };
+      return { theme: "light", textSize: "normal", contrast: "normal", motion: "normal", ...JSON.parse(localStorage.getItem(storageKey) ?? "{}") };
     } catch {
-      return { textSize: "normal", contrast: "normal", motion: "normal" };
+      return { theme: "light", textSize: "normal", contrast: "normal", motion: "normal" };
     }
   });
 
   useEffect(() => {
+    document.body.classList.toggle("dark-mode", prefs.theme === "dark");
     document.body.classList.toggle("large-text", prefs.textSize === "large");
     document.body.classList.toggle("high-contrast", prefs.contrast === "high");
     document.body.classList.toggle("reduced-motion", prefs.motion === "reduced");
@@ -44,7 +46,7 @@ export default function AccessibilityToolbar({ compact = false }) {
         aria-expanded={open}
         aria-label="Open accessibility preferences"
         onClick={() => setOpen((current) => !current)}
-        className="inline-flex h-10 items-center gap-2 rounded-md border border-slateLine bg-white px-3 text-sm font-black text-ink shadow-sm transition hover:bg-civic focus:outline focus:outline-2"
+        className="inline-flex h-10 shrink-0 items-center gap-2 rounded-md border border-slateLine bg-white px-3 text-sm font-black text-ink shadow-sm transition hover:bg-civic focus:outline focus:outline-2"
       >
         <Icon name="Accessibility" className="h-4 w-4" />
         {!compact ? "Access" : null}
@@ -60,6 +62,15 @@ export default function AccessibilityToolbar({ compact = false }) {
               <Icon name="X" className="h-4 w-4" />
             </button>
           </div>
+          <Control
+            label="Theme"
+            options={[
+              ["light", "Light"],
+              ["dark", "Dark"]
+            ]}
+            value={prefs.theme}
+            onChange={(value) => setMode("theme", value)}
+          />
           <Control
             label="Text Size"
             options={[
