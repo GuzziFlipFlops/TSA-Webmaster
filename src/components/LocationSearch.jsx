@@ -17,7 +17,7 @@ export default function LocationSearch({ onLocationChange }) {
     setStatus("");
     const result = await geocodeLocation(input, profile.id);
     if (!result) {
-      setStatus("That city or ZIP is not in the local demo lookup yet. Showing the configured community center instead.");
+      setStatus("That city or ZIP is not in the local lookup yet. Showing the configured community center instead.");
       onLocationChange(defaultLocation);
       return;
     }

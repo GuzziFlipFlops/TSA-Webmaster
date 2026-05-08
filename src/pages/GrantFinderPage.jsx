@@ -97,7 +97,7 @@ export default function GrantFinderPage() {
       </PageHeader>
       <section className="mx-auto max-w-5xl px-4 py-10 sm:px-6 lg:px-8">
         <InfoPanel icon="BadgeAlert" title="Funding accuracy note" tone="amber">
-          Always confirm eligibility, deadlines, and award amounts on the official funder website. Demo opportunities are clearly marked and should be replaced with verified local data.
+          Always confirm eligibility, deadlines, and award amounts on the official funder website. Entries needing verification are clearly marked and should be replaced with verified local data.
         </InfoPanel>
         <div className="mt-6 rounded-lg border border-amber-200 bg-white p-6 shadow-soft">
           <div className="h-2 overflow-hidden rounded-full bg-amber-100">

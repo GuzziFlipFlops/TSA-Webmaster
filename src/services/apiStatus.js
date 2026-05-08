@@ -1,11 +1,11 @@
 export const apiStatus = {
-  dataLabel: "Curated demo dataset",
+  dataLabel: "Curated local dataset",
   compact:
-    "Curated demo dataset · Map tiles by OpenStreetMap · Listings are local/static unless API mode is connected.",
+    "Curated local records - Map tiles by OpenStreetMap - Listings are locally maintained unless live data is connected.",
   current:
-    "Current version uses curated static data. No 211, Google Places, Grants.gov, or live government API key is required.",
+    "Current version uses curated local records. No 211, Google Places, Grants.gov, or live government API key is required.",
   map:
-    "Leaflet renders OpenStreetMap map tiles. Resource pins come from local profile data, not live place search.",
+    "Leaflet renders OpenStreetMap map tiles. Resource pins come from local service-area data, not live place search.",
   geolocation:
     "Browser geolocation is only used when the user clicks Use my location, and it is used only in the browser to sort nearby local records.",
   futureApis: [

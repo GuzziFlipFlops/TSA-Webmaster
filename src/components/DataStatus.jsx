@@ -11,7 +11,7 @@ export default function DataStatus({ className = "" }) {
         <span>{apiStatus.compact}</span>
       </div>
       <p className="mt-1 text-xs text-ink/55">
-        Active profile: {profile.shortLabel} · Last updated {profile.lastUpdated}
+        Service area: {profile.shortLabel} - Last updated {profile.lastUpdated}
       </p>
     </div>
   );

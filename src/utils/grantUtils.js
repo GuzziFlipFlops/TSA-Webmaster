@@ -18,7 +18,7 @@ export function grantAmountLabel(grant) {
 }
 
 export function grantDeadlineLabel(grant) {
-  if (grant.sampleData) return "Sample deadline";
+  if (grant.sampleData) return "Deadline needs verification";
   if (grant.deadlineType === "rolling") return "Rolling deadline";
   if (!grant.deadline) return titleCase(grant.deadlineType ?? "Check official source");
   return formatDate(grant.deadline);

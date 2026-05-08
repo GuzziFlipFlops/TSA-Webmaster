@@ -39,14 +39,14 @@ Connect this GitHub repo to Vercel and use the default Vite settings:
 
 ## Data and API Status
 
-The current build uses a curated static demo dataset. No live API keys are required.
+The current build uses a curated local dataset. No live API keys are required.
 
-- Resources, grants, events, ZIP lookup, and map pins are local/static.
+- Resources, grants, events, ZIP lookup, and map pins are locally maintained records.
 - Leaflet displays OpenStreetMap map tiles.
 - Browser geolocation is used only after the user clicks **Use my location**.
 - Location is used only in the browser to sort nearby local records.
 - Listings include `sourceUrl`, `verifiedDate`, `isSample`, `dataStatus`, `serviceArea`, and `coordinatesApproximate`.
-- Sample/demo entries are visibly labeled and should be replaced with verified local data before final public use.
+- Entries needing verification are visibly labeled and should be replaced with verified local data before final public use.
 
 Future APIs should be added through the provider layer, not directly in page components:
 
@@ -57,11 +57,11 @@ Future APIs should be added through the provider layer, not directly in page com
 - `src/services/locationUtils.js`
 - `src/services/apiStatus.js`
 
-Potential future sources include 211, Google Places, Grants.gov, OpenStreetMap/Nominatim, and Delaware/Maryland open data portals. These are not required for demo mode.
+Potential future sources include 211, Google Places, Grants.gov, OpenStreetMap/Nominatim, and Delaware/Maryland open data portals. These are not required for the local-data build.
 
 ## Location Profiles
 
-The app supports two selectable demo profiles:
+The app supports two selectable service areas:
 
 - Middletown / New Castle County, Delaware
 - TSA Nationals / National Harbor, Maryland
@@ -90,6 +90,6 @@ To customize for the actual school community, edit or add a profile with local r
 ## Known Limitations
 
 - Data is curated/static unless a future provider is connected.
-- Some entries are sample/demo listings and must be verified before real-world use.
+- Some entries are marked as needing verification before real-world use.
 - Location search uses a local ZIP/city lookup, not internet geocoding.
 - Grant deadlines, eligibility, hours, and service availability must be verified on official sources.

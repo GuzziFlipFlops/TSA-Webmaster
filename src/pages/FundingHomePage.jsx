@@ -115,7 +115,7 @@ export default function FundingHomePage() {
           <SectionHeader
             eyebrow="Featured funding"
             title="Strong starter opportunities for school teams"
-            description="Every official opportunity includes a source link and verified date. Demo entries are labeled when they show local workflow patterns."
+            description="Every official opportunity includes a source link and verified date. Entries that still need verification are labeled clearly."
             action={<ButtonLink to="/funding/directory" variant="gold" icon="BadgeDollarSign">See all funding</ButtonLink>}
           />
           <div className="grid gap-5 lg:grid-cols-3">
@@ -128,7 +128,7 @@ export default function FundingHomePage() {
 
       <section className="mx-auto grid max-w-7xl gap-8 px-4 py-10 sm:px-6 lg:grid-cols-[1fr_0.9fr] lg:px-8">
         <div>
-          <SectionHeader eyebrow="Spotlights" title="Premium funding profiles" description="Three judging-friendly cards explain the opportunity, the sponsor path, and why the funding matters." />
+          <SectionHeader eyebrow="Spotlights" title="Premium funding spotlights" description="Three judging-friendly cards explain the opportunity, the sponsor path, and why the funding matters." />
           <div className="grid gap-5">
             {spotlightCards.map((spotlight) => (
               <GrantSpotlightCard

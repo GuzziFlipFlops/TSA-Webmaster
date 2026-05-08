@@ -2,12 +2,10 @@ import { Link, useNavigate } from "react-router-dom";
 import EventCard from "../components/EventCard.jsx";
 import GrantCard from "../components/GrantCard.jsx";
 import Icon from "../components/Icon.jsx";
-import DataStatus from "../components/DataStatus.jsx";
 import LocationProfileSelector from "../components/LocationProfileSelector.jsx";
 import ResourceCard from "../components/ResourceCard.jsx";
 import useActiveProfile from "../components/useActiveProfile.js";
 import { ButtonLink, SectionHeader } from "../components/UI.jsx";
-import { communityProfile } from "../data/communityData";
 import { getEvents } from "../services/eventProvider";
 import { getResources } from "../services/resourceProvider";
 import { getGrants } from "../services/grantProvider";
@@ -36,6 +34,12 @@ export default function HomePage() {
   const featuredGrants = grants.filter((grant) => grant.featured).slice(0, 3);
   const mapPreview = resources.filter(isLocationBasedResource).filter((resource) => ["learning-resource", "support-service", "club-opportunity", "volunteer-opportunity"].includes(getResourcePillar(resource))).slice(0, 4);
   const youthEvents = events.filter((event) => event.audience.includes("students") || event.volunteerOpportunity).slice(0, 3);
+  const snapshotStats = [
+    { label: "Local resources", value: resources.length },
+    { label: "Funding opportunities", value: grants.length },
+    { label: "Youth events", value: events.length },
+    { label: "Mapped locations", value: resources.filter(isLocationBasedResource).length }
+  ];
 
   function handleSearch(event) {
     event.preventDefault();
@@ -59,10 +63,7 @@ export default function HomePage() {
             <p className="mt-5 max-w-2xl text-lg leading-8 text-ink/72">
               Community Compass connects students and families with educational resources, youth programs, community support, volunteering, and school funding.
             </p>
-            <div className="mt-5 flex max-w-3xl flex-col gap-3 sm:flex-row sm:items-end">
-              <LocationProfileSelector />
-              <DataStatus className="flex-1" />
-            </div>
+            <LocationProfileSelector className="mt-5 max-w-3xl" />
             <form onSubmit={handleSearch} className="mt-7 flex max-w-3xl flex-col gap-3 rounded-lg border border-slateLine bg-white p-3 shadow-soft sm:flex-row">
               <label className="sr-only" htmlFor="home-search">Search opportunities</label>
               <input
@@ -92,7 +93,7 @@ export default function HomePage() {
                 <Icon name="Sparkles" className="h-5 w-5 text-harbor" />
               </div>
               <div className="mt-5 grid grid-cols-2 gap-3">
-                {communityProfile.stats.map((stat) => (
+                {snapshotStats.map((stat) => (
                   <div key={stat.label} className="rounded-lg bg-civic p-4">
                     <p className="text-2xl font-black text-ink">{stat.value}</p>
                     <p className="mt-1 text-xs font-bold uppercase tracking-wide text-ink/58">{stat.label}</p>
@@ -102,7 +103,7 @@ export default function HomePage() {
             </div>
             <div className="rounded-lg border border-slateLine bg-white p-5 shadow-soft">
               <div className="flex items-center justify-between">
-                <p className="font-black">Nearby resource preview</p>
+                <p className="font-black">Nearby resources</p>
                 <Link to="/map" className="text-sm font-black text-harbor">Open map</Link>
               </div>
               <div className="mt-4 grid gap-2">

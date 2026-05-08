@@ -29,7 +29,7 @@ export default function VolunteerPage() {
         <InfoPanel icon="ShieldCheck" title="Free-only exchange rule" tone="teal">
           Community Exchange entries are for verified donation drives, service needs, and free community support. They do not support sales or payment handling.
         </InfoPanel>
-        <SectionHeader title="Community exchange board" description="Sample board items connect to verified resources and events." />
+        <SectionHeader title="Community exchange board" description="Board items connect to local resources, service needs, and events." />
         <div className="grid gap-4 md:grid-cols-3">
           {exchangeItems.map((item) => {
             const host = resourceById(resources, item.hostResourceId);

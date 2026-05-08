@@ -1,5 +1,5 @@
 import { profileLocationLookup } from "../data/locationLookup";
-import { defaultProfileId } from "../data/locationProfiles";
+import { defaultProfileId, getProfileById } from "../data/locationProfiles";
 import { getDefaultLocation } from "./locationUtils";
 
 function normalizeQuery(input) {
@@ -8,6 +8,24 @@ function normalizeQuery(input) {
     .toLowerCase()
     .replace(/,\s*/g, " ")
     .replace(/\s+/g, " ");
+}
+
+export function findKnownLocation(input) {
+  const normalized = normalizeQuery(input);
+  if (!normalized) return null;
+
+  for (const [profileId, lookup] of Object.entries(profileLocationLookup)) {
+    const direct = lookup[normalized];
+    if (direct) return { ...direct, profileId, profile: getProfileById(profileId) };
+
+    const zip = normalized.match(/\b\d{5}\b/)?.[0];
+    if (zip && lookup[zip]) return { ...lookup[zip], profileId, profile: getProfileById(profileId) };
+
+    const cityMatch = Object.keys(lookup).find((key) => normalized.includes(key));
+    if (cityMatch) return { ...lookup[cityMatch], profileId, profile: getProfileById(profileId) };
+  }
+
+  return null;
 }
 
 export async function geocodeLocation(input, profileId = defaultProfileId) {
@@ -25,6 +43,6 @@ export async function geocodeLocation(input, profileId = defaultProfileId) {
   if (cityMatch) return lookup[cityMatch];
 
   // TODO: A future provider could connect Nominatim or Google Geocoding.
-  // Keep this demo local-only so it never pretends to search the internet.
+  // Keep this local-only so it never pretends to search the internet.
   return null;
 }

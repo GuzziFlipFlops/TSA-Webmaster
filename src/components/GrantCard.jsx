@@ -64,8 +64,8 @@ export default function GrantCard({ grant, saved = false, onToggleSave, compact 
       </div>
       {isSample ? (
         <div className="mt-4">
-          <InfoPanel icon="BadgeAlert" title="Sample opportunity" tone="amber">
-            This demo entry shows how a local sponsor or association opportunity would appear after verification.
+          <InfoPanel icon="BadgeAlert" title="Needs verification" tone="amber">
+            This entry shows a local sponsor or association opportunity format and should be verified before real-world use.
           </InfoPanel>
         </div>
       ) : null}
@@ -82,7 +82,7 @@ export default function GrantCard({ grant, saved = false, onToggleSave, compact 
           </a>
         ) : (
           <span className="inline-flex items-center rounded-full border border-slateLine bg-slate-50 px-4 py-2 text-sm font-black text-slate-600">
-            Demo data only
+            Verification needed
           </span>
         )}
       </div>

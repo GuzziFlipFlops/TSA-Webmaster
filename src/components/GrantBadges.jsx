@@ -8,7 +8,7 @@ export function FundingAmountBadge({ grant }) {
 
 export function DeadlineBadge({ grant }) {
   const days = daysUntilDeadline(grant);
-  if (grant.sampleData) return <Badge color="slate">Sample data</Badge>;
+  if (grant.sampleData) return <Badge color="slate">Needs verification</Badge>;
   if (grant.deadlineType === "rolling") return <Badge color="green">Rolling deadline</Badge>;
   if (days !== null && days >= 0 && days <= 60) return <Badge color="red">Closing in {days} days</Badge>;
   if (days !== null && days < 0) return <Badge color="slate">Annual cycle</Badge>;
@@ -20,7 +20,7 @@ export function EligibilityBadge({ children }) {
 }
 
 export function GrantStatusPill({ grant }) {
-  if (grant.sampleData) return <Badge color="slate">Demo only</Badge>;
+  if (grant.sampleData) return <Badge color="slate">Needs verification</Badge>;
   if (grant.status === "Rolling") return <Badge color="green">Rolling</Badge>;
   return <Badge color="amber">{titleCase(grant.status)}</Badge>;
 }

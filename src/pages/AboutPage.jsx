@@ -22,7 +22,7 @@ export default function AboutPage() {
       <PageHeader
         eyebrow="About / credits / citations"
         title="Purpose, transparency, data sources, and project credits."
-        description="Community Compass is a TSA Webmaster prototype for a focused student, learning, support, clubs, volunteering, events, and funding hub."
+        description="Community Compass is a TSA Webmaster competition build for a focused student, learning, support, clubs, volunteering, events, and funding hub."
       >
         <div className="flex flex-col gap-3 lg:flex-row lg:items-end">
           <LocationProfileSelector />
@@ -40,10 +40,10 @@ export default function AboutPage() {
               <Badge color="blue">{learningCount} learning entries</Badge>
               <Badge color="teal">{resources.length} total resources</Badge>
               <Badge color="amber">{grants.length} funding entries</Badge>
-              <Badge color="slate">{sampleResources + sampleGrants} sample/demo entries</Badge>
+              <Badge color="slate">{sampleResources + sampleGrants} entries needing verification</Badge>
             </div>
             <p className="mt-5 text-sm font-bold text-ink/62">
-              Active profile: {profile.serviceAreaLabel}. Data mode: {dataStatusLabels[profile.dataMode]}. Last updated {profile.lastUpdated}.
+              Service area: {profile.serviceAreaLabel}. Data mode: {dataStatusLabels[profile.dataMode]}. Last updated {profile.lastUpdated}.
             </p>
           </div>
           <div className="grid gap-4">
@@ -85,7 +85,7 @@ export default function AboutPage() {
         </div>
       </section>
       <section className="mx-auto max-w-7xl px-4 py-10 sm:px-6 lg:px-8">
-        <SectionHeader title="Citations" description="Official sources and technology credits used by the seeded prototype." />
+        <SectionHeader title="Citations" description="Official sources and technology credits used by the curated site dataset." />
         <div className="grid gap-3 md:grid-cols-2">
           {profile.citations.map((citation) => (
             <a key={citation.url} href={citation.url} target="_blank" rel="noreferrer" className="rounded-lg border border-slateLine bg-white p-4 font-bold text-harbor shadow-sm hover:bg-civic">
@@ -98,12 +98,12 @@ export default function AboutPage() {
         <div className="mb-6 rounded-lg border border-slateLine bg-white p-5">
           <SectionHeader
             title="API-ready path"
-            description="The current build reads local seeded data through provider files. Future integrations could connect 211/community resource APIs, Google Places, local open-data portals, Grants.gov, Nominatim geocoding, or district data without changing the page components."
+            description="The current build reads curated local data through provider files. Future integrations could connect 211/community resource APIs, Google Places, local open-data portals, Grants.gov, Nominatim geocoding, or district data without changing the page components."
           />
         </div>
         <div className="rounded-lg bg-ink p-6 text-white">
           <SectionHeader
-            title="Judge demo talking points"
+            title="Judge presentation talking points"
             description="Focused theme fit, reusable component architecture, structured data modeling, purpose-built map strategy, funding verification labels, accessibility modes, localStorage moderation, and TSA/CTE connection."
             action={<Link to="/" className="rounded-full bg-white px-4 py-2 text-sm font-black text-ink">Return home</Link>}
           />

@@ -13,7 +13,7 @@ export default function EventCard({ event, compact = false }) {
         <Badge color="amber">{formatDate(event.date)}</Badge>
         <Badge color="teal">{category.name}</Badge>
         {event.volunteerOpportunity ? <Badge color="purple">Volunteer</Badge> : null}
-        {isSample ? <Badge color="slate">Sample/demo listing</Badge> : null}
+        {isSample ? <Badge color="slate">Needs verification</Badge> : null}
       </div>
       <h3 className="mt-3 text-lg font-black leading-snug sm:text-xl">{event.title}</h3>
       <p className="mt-2 line-clamp-3 leading-7 text-ink/70">{event.description}</p>

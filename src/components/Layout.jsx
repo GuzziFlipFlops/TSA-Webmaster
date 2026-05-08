@@ -101,7 +101,7 @@ export default function Layout() {
             <span className="min-w-0 max-w-[190px] leading-tight">
               <span className="block truncate text-sm font-black sm:text-base">{siteConfig.siteName}</span>
               <span className="hidden truncate text-[0.66rem] font-bold uppercase tracking-[0.14em] text-harbor lg:block">
-                {siteConfig.subtitle}
+                Learning & Support Hub
               </span>
             </span>
           </Link>

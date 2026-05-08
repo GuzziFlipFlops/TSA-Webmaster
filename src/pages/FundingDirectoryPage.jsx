@@ -38,7 +38,7 @@ export default function FundingDirectoryPage() {
         tone="gold"
         eyebrow="Funding directory"
         title="Search school, club, teacher, youth, nonprofit, and community project funding."
-        description="Every card shows eligibility, sponsor requirements, amount, deadline type, official source, and verified date. Sample/demo opportunities are visibly labeled."
+        description="Every card shows eligibility, sponsor requirements, amount, deadline type, official source, and verified date. Entries needing verification are visibly labeled."
       >
         <div className="mb-3">
           <LocationProfileSelector />

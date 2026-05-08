@@ -7,7 +7,7 @@
 
 @layer components {
   .cc-container {
-    @apply mx-auto max-w-[1200px] px-4 sm:px-6 lg:px-8;
+    @apply mx-auto max-w-[1500px] px-4 sm:px-6 lg:px-8;
   }
 
   .field {
@@ -60,6 +60,8 @@
   --cc-input: #ffffff;
   --cc-map-panel: #ffffff;
   --focus-ring: var(--cc-primary);
+  --page-max: 1500px;
+  --page-gutter: clamp(0.875rem, 2.2vw, 2.25rem);
 }
 
 html {
@@ -69,10 +71,32 @@ html {
 body {
   min-width: 320px;
   min-height: 100vh;
+  overflow-x: hidden;
   background:
     radial-gradient(circle at top left, rgba(15, 118, 110, 0.12), transparent 28rem),
     linear-gradient(180deg, #fffdf8 0%, #f6f3ed 42%, #eef5f2 100%);
   color: var(--cc-text);
+}
+
+.cc-container,
+.max-w-7xl {
+  width: min(var(--page-max), calc(100vw - (var(--page-gutter) * 2)));
+  max-width: var(--page-max) !important;
+  padding-left: 0 !important;
+  padding-right: 0 !important;
+}
+
+@media (min-width: 1600px) {
+  :root {
+    --page-max: 1680px;
+    --page-gutter: clamp(1.25rem, 3vw, 3.5rem);
+  }
+}
+
+@media (max-width: 640px) {
+  :root {
+    --page-gutter: 0.875rem;
+  }
 }
 
 body.dark-mode {
@@ -120,6 +144,27 @@ body.dark-mode .to-white {
   background-color: #111c2e !important;
   background-image: none !important;
   color: #e7f2f0 !important;
+}
+
+body.dark-mode .from-paper {
+  --tw-gradient-from: #0b1220 var(--tw-gradient-from-position);
+  --tw-gradient-to: rgb(11 18 32 / 0) var(--tw-gradient-to-position);
+  --tw-gradient-stops: var(--tw-gradient-from), var(--tw-gradient-to);
+}
+
+body.dark-mode .via-paper\/94 {
+  --tw-gradient-to: rgb(11 18 32 / 0) var(--tw-gradient-to-position);
+  --tw-gradient-stops: var(--tw-gradient-from), rgb(11 18 32 / 0.94) var(--tw-gradient-via-position), var(--tw-gradient-to);
+}
+
+body.dark-mode .to-paper\/70 {
+  --tw-gradient-to: rgb(11 18 32 / 0.72) var(--tw-gradient-to-position);
+}
+
+body.dark-mode .from-paper\/0 {
+  --tw-gradient-from: rgb(11 18 32 / 0) var(--tw-gradient-from-position);
+  --tw-gradient-to: rgb(11 18 32 / 0) var(--tw-gradient-to-position);
+  --tw-gradient-stops: var(--tw-gradient-from), var(--tw-gradient-to);
 }
 
 body.dark-mode article,

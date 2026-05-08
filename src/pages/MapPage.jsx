@@ -59,7 +59,7 @@ export default function MapPage() {
       <section className="cc-container py-10">
         <div className="mb-4 flex flex-col gap-3 lg:flex-row lg:items-center lg:justify-between">
           <div>
-            <p className="font-black">Mapped resources from the curated demo dataset</p>
+            <p className="font-black">Mapped resources from curated local records</p>
             <p className="mt-1 text-sm text-ink/60">Sorted from {location.label}. Grants and online-only listings are excluded.</p>
           </div>
           <div className="flex flex-wrap gap-2" aria-label="Map pillar filters">
@@ -84,7 +84,7 @@ export default function MapPage() {
             </div>
             <aside className="max-h-[62vh] min-h-[480px] overflow-auto rounded-lg border border-slateLine bg-white p-4 shadow-sm">
               <div className="sticky top-0 z-10 bg-white pb-3">
-                <p className="font-black">Nearby resource preview</p>
+                <p className="font-black">Nearby resources</p>
                 <p className="mt-1 text-sm text-ink/60">{filtered.length} physical resources</p>
               </div>
               <div className="grid gap-3">
@@ -100,7 +100,7 @@ export default function MapPage() {
                       <Badge color={resource.cost === "free" ? "green" : "amber"}>{resource.cost}</Badge>
                       <Badge color="teal">{resource.neighborhood}</Badge>
                       {Number.isFinite(resource.distanceMiles) ? <Badge color="slate">{formatDistance(resource.distanceMiles)}</Badge> : null}
-                      {resource.isSample ? <Badge color="slate">Sample</Badge> : null}
+                      {resource.isSample ? <Badge color="slate">Needs verification</Badge> : null}
                     </div>
                     <p className="mt-2 font-black">{resource.name}</p>
                     <p className="mt-1 line-clamp-2 text-sm text-ink/62">{resource.description}</p>

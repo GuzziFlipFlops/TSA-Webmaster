@@ -47,8 +47,8 @@ export default function GrantSpotlightCard({ spotlight, grant: providedGrant }) 
         </div>
         {grant?.sampleData ? (
           <div className="mt-4">
-            <InfoPanel icon="BadgeAlert" title="Sample data" tone="amber">
-              This spotlight demonstrates a local funding format and should be replaced with verified school, PTA, booster, or civic association details.
+            <InfoPanel icon="BadgeAlert" title="Needs verification" tone="amber">
+              This spotlight uses a local funding format and should be replaced with verified school, PTA, booster, or civic association details.
             </InfoPanel>
           </div>
         ) : null}

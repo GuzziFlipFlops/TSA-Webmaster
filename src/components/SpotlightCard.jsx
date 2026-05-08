@@ -1,11 +1,9 @@
 import { Link } from "react-router-dom";
-import { resources } from "../data/communityData";
-import { getCategory, resourceById } from "../utils/resourceUtils";
+import { getCategory } from "../utils/resourceUtils";
 import Icon from "./Icon.jsx";
 import { Badge } from "./UI.jsx";
 
-export default function SpotlightCard({ spotlight, premium = false }) {
-  const resource = resourceById(resources, spotlight.resourceId);
+export default function SpotlightCard({ spotlight, resource, premium = false }) {
   const category = resource ? getCategory(resource.categoryId) : null;
   return (
     <article className={`overflow-hidden rounded-lg border shadow-sm ${premium ? "border-teal-200 bg-white" : "border-slateLine bg-white"}`}>
@@ -16,7 +14,7 @@ export default function SpotlightCard({ spotlight, premium = false }) {
       <div className="p-5">
         <div className="flex flex-wrap gap-2">
           {category ? <Badge color="teal">{category.name}</Badge> : null}
-          <Badge color="amber">Premium profile</Badge>
+          <Badge color="amber">Featured story</Badge>
         </div>
         <h3 className="mt-3 text-xl font-black">{spotlight.headline}</h3>
         <p className="mt-2 text-sm font-bold text-harbor">{resource?.name}</p>
@@ -29,7 +27,7 @@ export default function SpotlightCard({ spotlight, premium = false }) {
             </a>
           ) : null}
           <Link to="/spotlights" className="rounded-full border border-slateLine bg-white px-4 py-2 text-sm font-black text-ink hover:bg-civic">
-            Read profile
+            Read spotlight
           </Link>
         </div>
       </div>

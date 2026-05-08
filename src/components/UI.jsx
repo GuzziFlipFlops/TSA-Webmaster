@@ -6,9 +6,9 @@ export function PageHeader({ eyebrow, title, description, children, tone = "defa
   return (
     <section className={`border-b border-slateLine bg-gradient-to-br ${toneClass}`}>
       <div className="cc-container py-12 md:py-16">
-        <div className="max-w-3xl">
+        <div className="max-w-5xl">
           {eyebrow ? <p className="text-sm font-black uppercase tracking-[0.2em] text-harbor">{eyebrow}</p> : null}
-          <h1 className="mt-3 text-[clamp(2rem,5vw,3.75rem)] font-black leading-[1.04] text-ink">{title}</h1>
+          <h1 className="mt-3 text-[clamp(2rem,4.5vw,3.45rem)] font-black leading-[1.04] text-ink">{title}</h1>
           {description ? <p className="mt-4 text-lg leading-8 text-ink/72">{description}</p> : null}
         </div>
         {children ? <div className="mt-8">{children}</div> : null}
