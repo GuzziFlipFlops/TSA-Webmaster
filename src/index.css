@@ -1,0 +1,238 @@
+@import url("https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&display=swap");
+@import "leaflet/dist/leaflet.css";
+
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer components {
+  .cc-container {
+    @apply mx-auto max-w-[1200px] px-4 sm:px-6 lg:px-8;
+  }
+
+  .field {
+    @apply min-h-11 rounded-lg border border-slateLine bg-white px-3 py-2 font-medium text-ink shadow-sm focus:border-harbor focus:outline focus:outline-2;
+  }
+
+  .nav-link {
+    @apply rounded-md px-2.5 py-2 text-sm font-bold leading-none text-ink transition hover:bg-civic hover:text-ink focus:outline focus:outline-2;
+    opacity: 0.78;
+  }
+
+  .nav-link-active {
+    @apply bg-transparent text-harbor underline decoration-harbor decoration-2 underline-offset-8;
+    opacity: 1;
+  }
+
+  .card {
+    @apply flex h-full flex-col rounded-lg border border-slateLine bg-white p-6 shadow-sm transition hover:-translate-y-0.5 hover:shadow-soft;
+  }
+
+  .btn-primary {
+    @apply inline-flex min-h-11 items-center justify-center gap-2 rounded-md bg-harbor px-4 py-2 text-sm font-black text-white transition hover:bg-teal-800 focus:outline focus:outline-2;
+  }
+
+  .btn-secondary {
+    @apply inline-flex min-h-11 items-center justify-center gap-2 rounded-md border border-slateLine bg-white px-4 py-2 text-sm font-black text-ink transition hover:bg-civic focus:outline focus:outline-2;
+  }
+}
+
+:root {
+  color: #10202f;
+  background: #f6f3ed;
+  font-synthesis: none;
+  text-rendering: optimizeLegibility;
+  -webkit-font-smoothing: antialiased;
+  --focus-ring: #0f766e;
+}
+
+html {
+  scroll-behavior: smooth;
+}
+
+body {
+  min-width: 320px;
+  min-height: 100vh;
+  background:
+    radial-gradient(circle at top left, rgba(15, 118, 110, 0.12), transparent 28rem),
+    linear-gradient(180deg, #fffdf8 0%, #f6f3ed 42%, #eef5f2 100%);
+}
+
+body.large-text {
+  font-size: 19px;
+}
+
+body.large-text p,
+body.large-text li,
+body.large-text label,
+body.large-text input,
+body.large-text select,
+body.large-text textarea {
+  font-size: 1.08rem !important;
+}
+
+body.large-text .text-xs {
+  font-size: 0.85rem !important;
+}
+
+body.large-text .text-sm {
+  font-size: 1rem !important;
+}
+
+body.large-text .text-base {
+  font-size: 1.12rem !important;
+}
+
+body.large-text .text-lg {
+  font-size: 1.25rem !important;
+}
+
+body.high-contrast {
+  background: #fff !important;
+  color: #000 !important;
+  --focus-ring: #000;
+}
+
+body.high-contrast header,
+body.high-contrast main,
+body.high-contrast section,
+body.high-contrast footer,
+body.high-contrast article,
+body.high-contrast aside,
+body.high-contrast .hc-surface,
+body.high-contrast .cc-surface {
+  background: #fff !important;
+  color: #000 !important;
+  border-color: #000 !important;
+  box-shadow: none !important;
+}
+
+body.high-contrast .hc-invert {
+  background: #000 !important;
+  color: #fff !important;
+}
+
+body.high-contrast a,
+body.high-contrast button,
+body.high-contrast input,
+body.high-contrast select,
+body.high-contrast textarea {
+  border-color: #000 !important;
+}
+
+body.high-contrast [class*="bg-ink"],
+body.high-contrast [class*="bg-harbor"],
+body.high-contrast [class*="bg-honey"],
+body.high-contrast [class*="bg-teal"],
+body.high-contrast [class*="bg-amber"],
+body.high-contrast [class*="bg-blue"],
+body.high-contrast [class*="bg-purple"],
+body.high-contrast [class*="bg-green"],
+body.high-contrast [class*="bg-rose"] {
+  background-color: #000 !important;
+  color: #fff !important;
+}
+
+body.high-contrast [class*="text-ink"],
+body.high-contrast [class*="text-harbor"],
+body.high-contrast [class*="text-honey"],
+body.high-contrast [class*="text-teal"],
+body.high-contrast [class*="text-amber"],
+body.high-contrast [class*="text-blue"],
+body.high-contrast [class*="text-purple"],
+body.high-contrast [class*="text-green"] {
+  color: #000 !important;
+}
+
+body.high-contrast [class*="ring-"] {
+  --tw-ring-color: #000 !important;
+}
+
+body.reduced-motion * {
+  animation-duration: 0.01ms !important;
+  animation-iteration-count: 1 !important;
+  scroll-behavior: auto !important;
+  transition-duration: 0.01ms !important;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  * {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    scroll-behavior: auto !important;
+    transition-duration: 0.01ms !important;
+  }
+}
+
+button,
+a,
+input,
+select,
+textarea {
+  outline-color: var(--focus-ring);
+  outline-offset: 3px;
+}
+
+.skip-link {
+  position: fixed;
+  left: 1rem;
+  top: 0.75rem;
+  z-index: 9999;
+  transform: translateY(-140%);
+  border-radius: 999px;
+  background: #10202f;
+  color: white;
+  padding: 0.75rem 1rem;
+  font-weight: 800;
+  transition: transform 180ms ease;
+}
+
+.skip-link:focus {
+  transform: translateY(0);
+}
+
+.map-grid {
+  background-image:
+    linear-gradient(rgba(15, 118, 110, 0.12) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(15, 118, 110, 0.12) 1px, transparent 1px);
+  background-size: 38px 38px;
+}
+
+.leaflet-container {
+  width: 100%;
+  height: 100%;
+  font-family: Inter, system-ui, sans-serif;
+}
+
+.community-pin {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 1.45rem !important;
+  height: 1.45rem !important;
+  border: 3px solid #fff;
+  border-radius: 999px;
+  box-shadow: 0 10px 24px rgba(16, 32, 47, 0.24);
+}
+
+.community-pin-selected {
+  width: 1.75rem !important;
+  height: 1.75rem !important;
+  box-shadow: 0 0 0 6px rgba(15, 118, 110, 0.2), 0 14px 32px rgba(16, 32, 47, 0.26);
+}
+
+.leaflet-popup-content-wrapper {
+  border-radius: 8px;
+  box-shadow: 0 22px 60px rgba(16, 32, 47, 0.18);
+}
+
+.leaflet-popup-content {
+  margin: 0;
+  min-width: 220px;
+}
+
+.premium-gradient {
+  background:
+    linear-gradient(135deg, rgba(15, 118, 110, 0.92), rgba(16, 32, 47, 0.92)),
+    repeating-linear-gradient(45deg, rgba(255, 255, 255, 0.12) 0 1px, transparent 1px 12px);
+}
