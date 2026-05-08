@@ -1,8 +1,11 @@
 import { useMemo, useState } from "react";
 import ResourceCard from "../components/ResourceCard.jsx";
 import ResourceMap from "../components/ResourceMap.jsx";
+import LocationProfileSelector from "../components/LocationProfileSelector.jsx";
+import useActiveProfile from "../components/useActiveProfile.js";
 import { Badge, EmptyState, PageHeader, SectionHeader } from "../components/UI.jsx";
 import { getResources } from "../services/resourceProvider";
+import { profileCenterArray } from "../data/locationProfiles";
 import { filterResources, isLearningResource, isLocationBasedResource, isOpenNow, sortResources } from "../utils/resourceUtils";
 
 const learningFilters = [
@@ -20,10 +23,11 @@ const learningFilters = [
 ];
 
 export default function LearningResourcesPage() {
+  const profile = useActiveProfile();
   const [query, setQuery] = useState("");
   const [active, setActive] = useState({});
   const [selectedId, setSelectedId] = useState("");
-  const learning = useMemo(() => getResources().filter(isLearningResource), []);
+  const learning = useMemo(() => getResources({}, profile.id).filter(isLearningResource), [profile.id]);
   const filtered = useMemo(() => {
     const base = filterResources(learning, { query });
     return sortResources(
@@ -57,6 +61,9 @@ export default function LearningResourcesPage() {
         title="Find libraries, makerspaces, computers, 3D printers, study rooms, tutoring, and creative spaces."
         description="This page focuses on the places and tools students can actually use to learn, build, study, design, and prepare."
       >
+        <div className="mb-3">
+          <LocationProfileSelector />
+        </div>
         <label className="sr-only" htmlFor="learning-search">Search learning resources</label>
         <input
           id="learning-search"
@@ -109,7 +116,7 @@ export default function LearningResourcesPage() {
               <p className="mt-1 text-sm text-ink/60">Only physical learning spaces are mapped.</p>
             </div>
             <div className="h-[560px] overflow-hidden rounded-lg">
-              <ResourceMap resources={mappable} selectedId={selected?.id} onSelect={setSelectedId} />
+              <ResourceMap resources={mappable} selectedId={selected?.id} onSelect={setSelectedId} center={profileCenterArray(profile)} />
             </div>
           </aside>
         </div>

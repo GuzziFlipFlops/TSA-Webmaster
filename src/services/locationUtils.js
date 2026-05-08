@@ -1,28 +1,21 @@
-import { siteConfig } from "../data/siteConfig";
+import { defaultProfileId, getProfileById, profileCenterArray } from "../data/locationProfiles";
 
-export const defaultCommunityLocation = {
-  label: `${siteConfig.communityName} center`,
-  coordinates: siteConfig.centerCoordinates
-};
+export function getDefaultLocation(profileId = defaultProfileId) {
+  const profile = getProfileById(profileId);
+  return {
+    label: `${profile.shortLabel} community center`,
+    coordinates: profileCenterArray(profile)
+  };
+}
 
-export const localLocationLookup = {
-  // Seeded demo lookup. Replace these entries with the actual school community before final submission.
-  "fairfax": { label: "Fairfax, VA", coordinates: [38.8462, -77.3064] },
-  "22030": { label: "Fairfax, VA 22030", coordinates: [38.8462, -77.3064] },
-  "22031": { label: "Merrifield, VA 22031", coordinates: [38.8731, -77.2367] },
-  "22032": { label: "Fairfax, VA 22032", coordinates: [38.817, -77.296] },
-  "annandale": { label: "Annandale, VA", coordinates: [38.8304, -77.1964] },
-  "chantilly": { label: "Chantilly, VA", coordinates: [38.8943, -77.4311] },
-  "reston": { label: "Reston, VA", coordinates: [38.9586, -77.357] },
-  "vienna": { label: "Vienna, VA", coordinates: [38.9012, -77.2653] }
-};
+export const defaultCommunityLocation = getDefaultLocation(defaultProfileId);
 
 export function toRadians(degrees) {
   return (degrees * Math.PI) / 180;
 }
 
 export function distanceMiles(from, to) {
-  if (!from?.length || !to?.length) return Number.POSITIVE_INFINITY;
+  if (!Array.isArray(from) || !Array.isArray(to)) return Number.POSITIVE_INFINITY;
   const [lat1, lon1] = from;
   const [lat2, lon2] = to;
   const deltaLat = toRadians(lat2 - lat1);

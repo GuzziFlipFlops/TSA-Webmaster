@@ -1,7 +1,10 @@
 import { useMemo, useState } from "react";
 import GrantCard from "../components/GrantCard.jsx";
+import LocationProfileSelector from "../components/LocationProfileSelector.jsx";
+import useActiveProfile from "../components/useActiveProfile.js";
 import { ButtonLink, InfoPanel, PageHeader } from "../components/UI.jsx";
-import { grantQuizOptions, recommendedGrants } from "../utils/grantUtils";
+import { getGrants } from "../services/grantProvider";
+import { grantQuizOptions, scoreGrant } from "../utils/grantUtils";
 
 const steps = [
   {
@@ -67,11 +70,20 @@ const steps = [
 ];
 
 export default function GrantFinderPage() {
+  const profile = useActiveProfile();
+  const grants = getGrants({}, profile.id);
   const [answers, setAnswers] = useState({});
   const stepIndex = Object.keys(answers).length;
   const currentStep = steps[stepIndex];
   const done = stepIndex >= steps.length;
-  const results = useMemo(() => recommendedGrants(answers), [answers]);
+  const results = useMemo(() => {
+    if (!done) return [];
+    return grants
+      .map((grant) => scoreGrant(grant, answers))
+      .filter((result) => result.score > 0)
+      .sort((a, b) => b.score - a.score)
+      .slice(0, 6);
+  }, [answers, done, grants]);
 
   return (
     <>
@@ -80,7 +92,9 @@ export default function GrantFinderPage() {
         eyebrow="Funding finder"
         title="Match a school, club, or community project to realistic funding paths."
         description="Recommendations are based on weighted tags for applicant type, project focus, sponsor requirements, funding amount, timing, and application difficulty."
-      />
+      >
+        <LocationProfileSelector />
+      </PageHeader>
       <section className="mx-auto max-w-5xl px-4 py-10 sm:px-6 lg:px-8">
         <InfoPanel icon="BadgeAlert" title="Funding accuracy note" tone="amber">
           Always confirm eligibility, deadlines, and award amounts on the official funder website. Demo opportunities are clearly marked and should be replaced with verified local data.

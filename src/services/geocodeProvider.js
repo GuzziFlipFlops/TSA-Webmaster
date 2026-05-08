@@ -1,19 +1,30 @@
-import { defaultCommunityLocation, localLocationLookup } from "./locationUtils";
+import { profileLocationLookup } from "../data/locationLookup";
+import { defaultProfileId } from "../data/locationProfiles";
+import { getDefaultLocation } from "./locationUtils";
 
-export async function geocodeLocation(input) {
-  const query = String(input ?? "").trim().toLowerCase();
-  if (!query) return defaultCommunityLocation;
+function normalizeQuery(input) {
+  return String(input ?? "")
+    .trim()
+    .toLowerCase()
+    .replace(/,\s*/g, " ")
+    .replace(/\s+/g, " ");
+}
 
-  const normalized = query.replace(/,\s*/g, " ").replace(/\s+/g, " ");
-  const direct = localLocationLookup[normalized];
+export async function geocodeLocation(input, profileId = defaultProfileId) {
+  const normalized = normalizeQuery(input);
+  if (!normalized) return getDefaultLocation(profileId);
+
+  const lookup = profileLocationLookup[profileId] ?? profileLocationLookup[defaultProfileId];
+  const direct = lookup[normalized];
   if (direct) return direct;
 
   const zip = normalized.match(/\b\d{5}\b/)?.[0];
-  if (zip && localLocationLookup[zip]) return localLocationLookup[zip];
+  if (zip && lookup[zip]) return lookup[zip];
 
-  const cityMatch = Object.keys(localLocationLookup).find((key) => normalized.includes(key));
-  if (cityMatch) return localLocationLookup[cityMatch];
+  const cityMatch = Object.keys(lookup).find((key) => normalized.includes(key));
+  if (cityMatch) return lookup[cityMatch];
 
-  // TODO: Connect Nominatim, Google Geocoding, or a local open-data geocoder here.
+  // TODO: A future provider could connect Nominatim or Google Geocoding.
+  // Keep this demo local-only so it never pretends to search the internet.
   return null;
 }

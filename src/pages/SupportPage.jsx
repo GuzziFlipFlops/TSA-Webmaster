@@ -1,5 +1,7 @@
 import { Link } from "react-router-dom";
+import LocationProfileSelector from "../components/LocationProfileSelector.jsx";
 import ResourceCard from "../components/ResourceCard.jsx";
+import useActiveProfile from "../components/useActiveProfile.js";
 import { ButtonLink, InfoPanel, PageHeader, SectionHeader } from "../components/UI.jsx";
 import { getResources } from "../services/resourceProvider";
 import { isSupportService } from "../utils/resourceUtils";
@@ -13,7 +15,8 @@ const supportTiles = [
 ];
 
 export default function SupportPage() {
-  const resources = getResources();
+  const profile = useActiveProfile();
+  const resources = getResources({}, profile.id);
   const supportResources = resources.filter(isSupportService);
   return (
     <>
@@ -22,6 +25,9 @@ export default function SupportPage() {
         title="Find practical support services that help students and families stay stable and connected."
         description="Support is part of educational opportunity: food, housing, safety, mental health, devices, transportation, and family programs all affect whether students can participate."
       >
+        <div className="mb-3">
+          <LocationProfileSelector />
+        </div>
         <div className="flex flex-wrap gap-3">
           <ButtonLink to="/finder" icon="Sparkles">Use opportunity finder</ButtonLink>
           <ButtonLink to="/resources?category=mental-health" variant="outline" icon="HeartPulse">Mental health support</ButtonLink>

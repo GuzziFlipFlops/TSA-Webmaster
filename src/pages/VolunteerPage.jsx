@@ -1,15 +1,19 @@
 import { Link } from "react-router-dom";
 import EventCard from "../components/EventCard.jsx";
+import LocationProfileSelector from "../components/LocationProfileSelector.jsx";
 import ResourceCard from "../components/ResourceCard.jsx";
+import useActiveProfile from "../components/useActiveProfile.js";
 import { Badge, InfoPanel, PageHeader, SectionHeader } from "../components/UI.jsx";
 import { exchangeItems } from "../data/communityData";
-import { getEvents, getResources } from "../services/resourceProvider";
+import { getEvents } from "../services/eventProvider";
+import { getResources } from "../services/resourceProvider";
 import { resourceById, titleCase } from "../utils/resourceUtils";
 
 export default function VolunteerPage() {
-  const resources = getResources();
-  const events = getEvents();
-  const volunteerResources = resources.filter((resource) => resource.categoryId === "volunteer" || resource.tags.includes("volunteer"));
+  const profile = useActiveProfile();
+  const resources = getResources({}, profile.id);
+  const events = getEvents({}, profile.id);
+  const volunteerResources = resources.filter((resource) => resource.categoryId === "volunteer" || resource.tags?.includes("volunteer"));
   const volunteerEvents = events.filter((event) => event.volunteerOpportunity);
 
   return (
@@ -18,7 +22,9 @@ export default function VolunteerPage() {
         eyebrow="Volunteer & community exchange"
         title="Service opportunities and free community aid without turning the site into a marketplace."
         description="This section supports donation drives, volunteer roles, school supply kits, and community aid. No payments, commerce, accounts, or user-to-user selling."
-      />
+      >
+        <LocationProfileSelector />
+      </PageHeader>
       <section className="mx-auto max-w-7xl px-4 py-10 sm:px-6 lg:px-8">
         <InfoPanel icon="ShieldCheck" title="Free-only exchange rule" tone="teal">
           Community Exchange entries are for verified donation drives, service needs, and free community support. They do not support sales or payment handling.

@@ -1,7 +1,7 @@
 import L from "leaflet";
 import { useEffect } from "react";
 import { MapContainer, Marker, Popup, TileLayer, useMap } from "react-leaflet";
-import { siteConfig } from "../data/siteConfig";
+import { defaultCommunityLocation } from "../services/locationUtils";
 import { getCategory, titleCase } from "../utils/resourceUtils";
 import { Badge } from "./UI.jsx";
 
@@ -27,7 +27,7 @@ function markerIcon(resource, selected) {
   });
 }
 
-export default function ResourceMap({ resources, selectedId, onSelect, center = siteConfig.centerCoordinates, zoom = 12 }) {
+export default function ResourceMap({ resources, selectedId, onSelect, center = defaultCommunityLocation.coordinates, zoom = 12 }) {
   const selectedResource = resources.find((resource) => resource.id === selectedId);
   return (
     <MapContainer center={center} zoom={zoom} scrollWheelZoom className="z-0 rounded-lg">

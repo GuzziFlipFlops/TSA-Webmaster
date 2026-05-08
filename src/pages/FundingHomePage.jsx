@@ -3,8 +3,10 @@ import GrantCard from "../components/GrantCard.jsx";
 import GrantReadinessChecklist from "../components/GrantReadinessChecklist.jsx";
 import GrantSpotlightCard from "../components/GrantSpotlightCard.jsx";
 import Icon from "../components/Icon.jsx";
+import LocationProfileSelector from "../components/LocationProfileSelector.jsx";
+import useActiveProfile from "../components/useActiveProfile.js";
 import { ButtonLink, PageHeader, SectionHeader } from "../components/UI.jsx";
-import { fundingCategories, grantSpotlights } from "../data/communityData";
+import { fundingCategories } from "../data/communityData";
 import { getGrants } from "../services/grantProvider";
 import { isClosingSoon } from "../utils/grantUtils";
 
@@ -32,9 +34,39 @@ const quickFilters = [
 ];
 
 export default function FundingHomePage() {
-  const grants = getGrants();
+  const profile = useActiveProfile();
+  const grants = getGrants({}, profile.id);
   const featured = grants.filter((grant) => grant.featured).slice(0, 3);
   const closingSoon = grants.filter(isClosingSoon).slice(0, 3);
+  const spotlightCards = [
+    {
+      id: "school-stem-equipment",
+      title: "School STEM Equipment Grant",
+      grantId: "toshiba-6-12-stem",
+      whoItIsFor: "Teachers, CTE programs, TSA chapters, robotics teams, and school clubs that need equipment for hands-on STEM learning.",
+      whatItFunds: "Engineering materials, science equipment, robotics-adjacent classroom tools, and project supplies.",
+      whyItMatters: "A strong equipment grant can turn a one-time lesson into a lab, club build, or TSA project that students can refine all year.",
+      applicationSteps: ["Define the learning goal", "List equipment and costs", "Get teacher/school approval", "Submit through the official funder page"]
+    },
+    {
+      id: "classroom-creative-project",
+      title: "Classroom and Creative Project Funding",
+      grantId: "donorschoose-classroom",
+      whoItIsFor: "Teachers and eligible school staff supporting classroom supplies, art materials, books, technology, and enrichment projects.",
+      whatItFunds: "Classroom supplies, student materials, technology, books, art supplies, and STEM tools.",
+      whyItMatters: "Small classroom projects are realistic for student teams to understand, document, and connect to learning outcomes.",
+      applicationSteps: ["Write a short project story", "Build the item list", "Confirm eligibility", "Share the official project page"]
+    },
+    {
+      id: "team-robotics-support",
+      title: "Robotics and School Team Support",
+      grantId: "first-team-grants",
+      whoItIsFor: "Robotics teams, TSA-adjacent STEM teams, schools, and youth organizations with a mentor or sponsor.",
+      whatItFunds: "Team registration, materials, outreach, competition participation, and robotics build costs.",
+      whyItMatters: "Competition funding helps students move from interest to sustained participation in engineering and leadership.",
+      applicationSteps: ["Confirm team eligibility", "Gather sponsor details", "Estimate season costs", "Apply through the official team grant pathway"]
+    }
+  ];
 
   return (
     <>
@@ -45,6 +77,7 @@ export default function FundingHomePage() {
         description="A focused opportunity navigator for students working with sponsors, teachers, school clubs, TSA and robotics teams, youth organizations, nonprofits, associations, and local service groups."
       >
         <div className="flex flex-wrap gap-3">
+          <LocationProfileSelector />
           <ButtonLink to="/funding/finder" variant="gold" icon="Sparkles">Launch funding finder</ButtonLink>
           <ButtonLink to="/funding/directory" variant="outline" icon="ListFilter">Browse funding directory</ButtonLink>
           <ButtonLink to="/funding/toolkit" variant="outline" icon="ClipboardCheck">Readiness toolkit</ButtonLink>
@@ -97,8 +130,12 @@ export default function FundingHomePage() {
         <div>
           <SectionHeader eyebrow="Spotlights" title="Premium funding profiles" description="Three judging-friendly cards explain the opportunity, the sponsor path, and why the funding matters." />
           <div className="grid gap-5">
-            {grantSpotlights.map((spotlight) => (
-              <GrantSpotlightCard key={spotlight.id} spotlight={spotlight} />
+            {spotlightCards.map((spotlight) => (
+              <GrantSpotlightCard
+                key={spotlight.id}
+                spotlight={spotlight}
+                grant={grants.find((grant) => grant.id === spotlight.grantId)}
+              />
             ))}
           </div>
         </div>

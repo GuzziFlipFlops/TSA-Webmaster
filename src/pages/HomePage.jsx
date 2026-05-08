@@ -2,11 +2,14 @@ import { Link, useNavigate } from "react-router-dom";
 import EventCard from "../components/EventCard.jsx";
 import GrantCard from "../components/GrantCard.jsx";
 import Icon from "../components/Icon.jsx";
+import DataStatus from "../components/DataStatus.jsx";
+import LocationProfileSelector from "../components/LocationProfileSelector.jsx";
 import ResourceCard from "../components/ResourceCard.jsx";
+import useActiveProfile from "../components/useActiveProfile.js";
 import { ButtonLink, SectionHeader } from "../components/UI.jsx";
 import { communityProfile } from "../data/communityData";
-import { dataStatusLabels, siteConfig } from "../data/siteConfig";
-import { getEvents, getResources } from "../services/resourceProvider";
+import { getEvents } from "../services/eventProvider";
+import { getResources } from "../services/resourceProvider";
 import { getGrants } from "../services/grantProvider";
 import { getCategory, getResourcePillar, isClubOpportunity, isLearningResource, isLocationBasedResource, isSupportService } from "../utils/resourceUtils";
 
@@ -23,9 +26,10 @@ const quickActions = [
 
 export default function HomePage() {
   const navigate = useNavigate();
-  const resources = getResources();
-  const events = getEvents();
-  const grants = getGrants();
+  const profile = useActiveProfile();
+  const resources = getResources({}, profile.id);
+  const events = getEvents({}, profile.id);
+  const grants = getGrants({}, profile.id);
   const featuredLearning = resources.filter(isLearningResource).slice(0, 6);
   const supportPreview = resources.filter(isSupportService).filter((resource) => ["food", "housing", "mental-health", "student-family"].includes(resource.categoryId)).slice(0, 4);
   const clubPreview = resources.filter(isClubOpportunity).slice(0, 3);
@@ -55,9 +59,10 @@ export default function HomePage() {
             <p className="mt-5 max-w-2xl text-lg leading-8 text-ink/72">
               Community Compass connects students and families with educational resources, youth programs, community support, volunteering, and school funding.
             </p>
-            <p className="mt-3 inline-flex rounded-full border border-slateLine bg-white px-3 py-1.5 text-xs font-black text-ink/65">
-              {dataStatusLabels[siteConfig.dataMode]} · Last updated {siteConfig.lastUpdated}
-            </p>
+            <div className="mt-5 flex max-w-3xl flex-col gap-3 sm:flex-row sm:items-end">
+              <LocationProfileSelector />
+              <DataStatus className="flex-1" />
+            </div>
             <form onSubmit={handleSearch} className="mt-7 flex max-w-3xl flex-col gap-3 rounded-lg border border-slateLine bg-white p-3 shadow-soft sm:flex-row">
               <label className="sr-only" htmlFor="home-search">Search opportunities</label>
               <input

@@ -1,15 +1,18 @@
 import { useMemo, useState } from "react";
 import EventCard from "../components/EventCard.jsx";
+import LocationProfileSelector from "../components/LocationProfileSelector.jsx";
+import useActiveProfile from "../components/useActiveProfile.js";
 import { Badge, EmptyState, PageHeader, SectionHeader } from "../components/UI.jsx";
 import { categories } from "../data/communityData";
-import { getEvents } from "../services/resourceProvider";
+import { getEvents } from "../services/eventProvider";
 import { formatDate, getCategory, titleCase } from "../utils/resourceUtils";
 
 export default function EventsPage() {
+  const profile = useActiveProfile();
   const [category, setCategory] = useState("");
   const [audience, setAudience] = useState("");
   const [view, setView] = useState("list");
-  const events = getEvents();
+  const events = getEvents({}, profile.id);
   const filtered = useMemo(
     () =>
       events.filter((event) => {
@@ -27,6 +30,9 @@ export default function EventsPage() {
         title="Find local youth programs, volunteer events, school nights, and community workshops."
         description="Events are stored in local data so judges can inspect the structure without relying on a live calendar API."
       >
+        <div className="mb-3">
+          <LocationProfileSelector />
+        </div>
         <div className="flex flex-wrap gap-3">
           <select value={category} onChange={(event) => setCategory(event.target.value)} className="min-h-11 rounded-lg border border-slateLine bg-white px-4 font-bold">
             <option value="">All categories</option>

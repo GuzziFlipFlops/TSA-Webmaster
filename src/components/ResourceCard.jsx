@@ -29,6 +29,7 @@ export default function ResourceCard({ resource, saved = false, onToggleSave, co
             <Badge color={urgencyColor(resource.urgency)}>{titleCase(resource.urgency)}</Badge>
             {openNow === true ? <Badge color="green">Open now</Badge> : openNow === false ? <Badge color="slate">Closed now</Badge> : <Badge color="slate">Hours not verified</Badge>}
             {isSample ? <Badge color="slate">Sample/demo listing</Badge> : null}
+            {resource.dataStatus === "verified" && !isSample ? <Badge color="green">Verified source</Badge> : null}
           </div>
           <h3 className="mt-3 text-lg font-black leading-snug text-ink sm:text-xl">{resource.name}</h3>
         </div>

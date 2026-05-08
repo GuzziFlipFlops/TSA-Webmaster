@@ -1,10 +1,13 @@
 import { useMemo, useState } from "react";
 import EventCard from "../components/EventCard.jsx";
 import GrantCard from "../components/GrantCard.jsx";
+import LocationProfileSelector from "../components/LocationProfileSelector.jsx";
 import ResourceCard from "../components/ResourceCard.jsx";
+import useActiveProfile from "../components/useActiveProfile.js";
 import { Badge, ButtonLink, InfoPanel, PageHeader } from "../components/UI.jsx";
 import { getGrants } from "../services/grantProvider";
-import { getEvents, getResources } from "../services/resourceProvider";
+import { getEvents } from "../services/eventProvider";
+import { getResources } from "../services/resourceProvider";
 import { scoreGrant } from "../utils/grantUtils";
 import { getResourcePillar, searchableText, titleCase } from "../utils/resourceUtils";
 
@@ -149,9 +152,10 @@ function scoreGrantForFinder(grant, answers) {
 }
 
 export default function OpportunityFinderPage() {
-  const resources = getResources();
-  const events = getEvents();
-  const grants = getGrants();
+  const profile = useActiveProfile();
+  const resources = getResources({}, profile.id);
+  const events = getEvents({}, profile.id);
+  const grants = getGrants({}, profile.id);
   const [answers, setAnswers] = useState({});
   const stepIndex = Object.keys(answers).length;
   const currentStep = steps[stepIndex];
@@ -174,7 +178,9 @@ export default function OpportunityFinderPage() {
         eyebrow="Opportunity finder"
         title="Get matched to learning spaces, support, clubs, volunteering, events, or funding."
         description="The finder recommends a mix of resources, events, and funding opportunities, clearly labeled by type."
-      />
+      >
+        <LocationProfileSelector />
+      </PageHeader>
       <section className="mx-auto max-w-5xl px-4 py-10 sm:px-6 lg:px-8">
         <InfoPanel icon="Info" title="Explainable matching" tone="teal">
           Results are ranked from local data tags, applicant fit, access format, urgency, cost, and interest area. Always verify official details before visiting or applying.

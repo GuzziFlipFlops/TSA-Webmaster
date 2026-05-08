@@ -1,39 +1,48 @@
-import { events as localEvents, resources as localResources } from "../data/communityData";
-import { siteConfig } from "../data/siteConfig";
-import { filterResources, getResourcePillar, isLocationBasedResource, matchesSearch } from "../utils/resourceUtils";
+import { defaultProfileId, getProfileById } from "../data/locationProfiles";
+import { filterResources, getResourcePillar, isLocationBasedResource } from "../utils/resourceUtils";
 import { sortByDistance, withDistance } from "./locationUtils";
 
-export function normalizeResource(resource) {
+const PROFILE_STORAGE_KEY = "cc-active-location-profile";
+
+export function getActiveProfile() {
+  if (typeof window === "undefined") return getProfileById(defaultProfileId);
+  return getProfileById(window.localStorage.getItem(PROFILE_STORAGE_KEY) ?? defaultProfileId);
+}
+
+export function setActiveProfile(profileId) {
+  const profile = getProfileById(profileId);
+  if (typeof window !== "undefined") {
+    window.localStorage.setItem(PROFILE_STORAGE_KEY, profile.id);
+    window.dispatchEvent(new CustomEvent("cc-profile-change", { detail: profile }));
+  }
+  return profile;
+}
+
+export function normalizeResource(resource, profile = getActiveProfile()) {
   const isSample =
     Boolean(resource.isSample) ||
     Boolean(resource.sampleData) ||
-    resource.tags?.includes("sample") ||
-    resource.source?.toLowerCase().includes("sample");
+    resource.dataStatus === "sample" ||
+    resource.tags?.includes("sample");
+  const dataStatus = resource.dataStatus ?? (isSample ? "sample" : "needs-review");
 
   return {
     ...resource,
     sourceUrl: resource.sourceUrl ?? resource.website ?? "",
-    verifiedDate: resource.verifiedDate ?? siteConfig.lastUpdated,
+    verifiedDate: resource.verifiedDate ?? profile.lastUpdated,
     isSample,
-    dataStatus: isSample ? "Sample/demo listing" : "Curated demo dataset",
+    sampleData: isSample,
+    dataStatus,
+    serviceArea: resource.serviceArea ?? profile.serviceAreaLabel,
+    coordinatesApproximate: resource.coordinatesApproximate ?? true,
+    profileId: profile.id,
     pillar: getResourcePillar(resource)
   };
 }
 
-export function normalizeEvent(event) {
-  const host = localResources.find((resource) => resource.id === event.hostResourceId);
-  const isSample = Boolean(event.isSample) || event.title?.toLowerCase().includes("sample");
-  return {
-    ...event,
-    sourceUrl: event.sourceUrl ?? event.registrationUrl ?? host?.website ?? "",
-    verifiedDate: event.verifiedDate ?? siteConfig.lastUpdated,
-    isSample,
-    dataStatus: isSample ? "Sample/demo listing" : "Curated demo dataset"
-  };
-}
-
-export function getResources(filters = {}) {
-  const normalized = localResources.map(normalizeResource);
+export function getResources(filters = {}, profileId = getActiveProfile().id) {
+  const profile = getProfileById(profileId);
+  const normalized = profile.resources.map((resource) => normalizeResource(resource, profile));
   const filtered = filterResources(normalized, {
     query: filters.query ?? "",
     category: filters.category ?? "",
@@ -44,7 +53,9 @@ export function getResources(filters = {}) {
     format: filters.format ?? "",
     openNow: filters.openNow,
     accessibility: filters.accessibility,
-    transportation: filters.transportation
+    transportation: filters.transportation,
+    savedOnly: filters.savedOnly,
+    savedIds: filters.savedIds
   }).filter((resource) => {
     if (filters.pillar && resource.pillar !== filters.pillar) return false;
     return true;
@@ -54,24 +65,10 @@ export function getResources(filters = {}) {
   return filtered;
 }
 
-export function getMappableResources(filters = {}) {
-  const items = getResources(filters).filter(isLocationBasedResource);
+export function getMappableResources(filters = {}, profileId = getActiveProfile().id) {
+  const items = getResources(filters, profileId).filter(isLocationBasedResource);
   return filters.location ? withDistance(sortByDistance(items, filters.location), filters.location) : items;
 }
 
-export function getEvents(filters = {}) {
-  return localEvents
-    .map(normalizeEvent)
-    .filter((event) => {
-      if (filters.query && !matchesSearch({ ...event, services: [], tags: [event.categoryId], languages: [], accessibility: [] }, filters.query)) {
-        const text = `${event.title} ${event.description} ${event.location} ${event.audience?.join(" ")}`.toLowerCase();
-        if (!text.includes(String(filters.query).toLowerCase())) return false;
-      }
-      if (filters.category && event.categoryId !== filters.category) return false;
-      if (filters.audience && !event.audience?.includes(filters.audience)) return false;
-      if (filters.volunteerOnly && !event.volunteerOpportunity) return false;
-      return true;
-    });
-}
-
-// TODO: Replace local reads with 211, local open-data, library, school district, or Google Places APIs when API keys and moderation rules are ready.
+// TODO: Future API providers could merge 211/community-service records, Google Places,
+// library open data, or district feeds here. Keep local profile data as the default.

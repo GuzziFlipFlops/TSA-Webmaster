@@ -1,29 +1,36 @@
-import { useMemo, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
+import DataStatus from "../components/DataStatus.jsx";
 import LocationSearch from "../components/LocationSearch.jsx";
+import LocationProfileSelector from "../components/LocationProfileSelector.jsx";
 import ResourceCard from "../components/ResourceCard.jsx";
 import ResourceMap from "../components/ResourceMap.jsx";
+import useActiveProfile from "../components/useActiveProfile.js";
 import { Badge, EmptyState, PageHeader } from "../components/UI.jsx";
-import { dataStatusLabels, siteConfig } from "../data/siteConfig";
 import { getMappableResources } from "../services/resourceProvider";
-import { defaultCommunityLocation, formatDistance } from "../services/locationUtils";
+import { formatDistance, getDefaultLocation } from "../services/locationUtils";
 import { hubPillars } from "../data/communityData";
 import { filterResources, getResourcePillar } from "../utils/resourceUtils";
 
 const mappedPillars = ["learning-resource", "support-service", "club-opportunity", "volunteer-opportunity", "career-opportunity"];
 
 export default function MapPage() {
+  const profile = useActiveProfile();
   const [pillar, setPillar] = useState("");
   const [selectedId, setSelectedId] = useState("");
   const [query, setQuery] = useState("");
-  const [location, setLocation] = useState(defaultCommunityLocation);
+  const [location, setLocation] = useState(() => getDefaultLocation(profile.id));
+
+  useEffect(() => {
+    setLocation(getDefaultLocation(profile.id));
+  }, [profile.id]);
 
   const filtered = useMemo(() => {
-    const base = getMappableResources({ location: location.coordinates });
+    const base = getMappableResources({ location: location.coordinates }, profile.id);
     return filterResources(base, { query }).filter((resource) => {
       if (!pillar) return mappedPillars.includes(getResourcePillar(resource));
       return getResourcePillar(resource) === pillar;
     });
-  }, [location, pillar, query]);
+  }, [location, pillar, profile.id, query]);
 
   const selected = filtered.find((resource) => resource.id === selectedId) ?? filtered[0];
 
@@ -35,6 +42,10 @@ export default function MapPage() {
         description="Libraries, makerspaces, learning centers, support services, volunteer sites, youth program locations, and local clubs belong on the map. Grants and online-only opportunities do not."
       >
         <div className="grid gap-4">
+          <div className="flex flex-col gap-3 lg:flex-row lg:items-end">
+            <LocationProfileSelector />
+            <DataStatus className="flex-1" />
+          </div>
           <LocationSearch onLocationChange={setLocation} />
           <input
             value={query}
@@ -48,17 +59,17 @@ export default function MapPage() {
       <section className="cc-container py-10">
         <div className="mb-4 flex flex-col gap-3 lg:flex-row lg:items-center lg:justify-between">
           <div>
-            <p className="font-black">Mapped resources from the {dataStatusLabels[siteConfig.dataMode].toLowerCase()}</p>
+            <p className="font-black">Mapped resources from the curated demo dataset</p>
             <p className="mt-1 text-sm text-ink/60">Sorted from {location.label}. Grants and online-only listings are excluded.</p>
           </div>
-          <div className="flex gap-2 overflow-x-auto pb-2 lg:pb-0" aria-label="Map pillar filters">
-            <button className={`shrink-0 rounded-md px-3 py-2 text-sm font-black ${pillar === "" ? "bg-ink text-white" : "border border-slateLine bg-white"}`} onClick={() => setPillar("")}>
+          <div className="flex flex-wrap gap-2" aria-label="Map pillar filters">
+            <button className={`rounded-md px-3 py-2 text-sm font-black ${pillar === "" ? "bg-ink text-white" : "border border-slateLine bg-white"}`} onClick={() => setPillar("")}>
               All
             </button>
             {hubPillars.filter((item) => mappedPillars.includes(item.id)).map((item) => (
               <button
                 key={item.id}
-                className={`shrink-0 rounded-md px-3 py-2 text-sm font-black ${pillar === item.id ? "bg-ink text-white" : "border border-slateLine bg-white"}`}
+                className={`rounded-md px-3 py-2 text-sm font-black ${pillar === item.id ? "bg-ink text-white" : "border border-slateLine bg-white"}`}
                 onClick={() => setPillar(item.id)}
               >
                 {item.name.replace("Student & Family ", "").replace("Volunteering & ", "")}

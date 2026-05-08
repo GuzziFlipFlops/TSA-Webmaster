@@ -1,11 +1,11 @@
 import { Link } from "react-router-dom";
-import { grantAmountLabel, grantById, grantDeadlineLabel } from "../utils/grantUtils";
+import { grantAmountLabel, grantById } from "../utils/grantUtils";
 import { titleCase } from "../utils/resourceUtils";
 import { Badge, InfoPanel } from "./UI.jsx";
 import { DeadlineBadge } from "./GrantBadges.jsx";
 
-export default function GrantSpotlightCard({ spotlight }) {
-  const grant = grantById(spotlight.grantId);
+export default function GrantSpotlightCard({ spotlight, grant: providedGrant }) {
+  const grant = providedGrant ?? grantById(spotlight.grantId);
   return (
     <article className="overflow-hidden rounded-lg border border-amber-200 bg-white shadow-sm">
       <div className="bg-gradient-to-br from-amber-500 to-teal-800 p-5 text-white">

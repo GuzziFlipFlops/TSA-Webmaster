@@ -2,10 +2,13 @@ import { Link } from "react-router-dom";
 import EventCard from "../components/EventCard.jsx";
 import GrantCard from "../components/GrantCard.jsx";
 import Icon from "../components/Icon.jsx";
+import LocationProfileSelector from "../components/LocationProfileSelector.jsx";
 import ResourceCard from "../components/ResourceCard.jsx";
+import useActiveProfile from "../components/useActiveProfile.js";
 import { ButtonLink, PageHeader, SectionHeader } from "../components/UI.jsx";
 import { getGrants } from "../services/grantProvider";
-import { getEvents, getResources } from "../services/resourceProvider";
+import { getEvents } from "../services/eventProvider";
+import { getResources } from "../services/resourceProvider";
 
 const needs = [
   ["Tutoring programs", "Find academic help, library resources, parent workshops, and youth learning programs.", "BookOpenCheck", "/resources?category=student-family"],
@@ -21,10 +24,11 @@ const needs = [
 ];
 
 export default function StudentsFamiliesPage() {
-  const resources = getResources();
-  const events = getEvents();
-  const grants = getGrants();
-  const studentResources = resources.filter((resource) => resource.tags.includes("student") || resource.audience.includes("students")).slice(0, 6);
+  const profile = useActiveProfile();
+  const resources = getResources({}, profile.id);
+  const events = getEvents({}, profile.id);
+  const grants = getGrants({}, profile.id);
+  const studentResources = resources.filter((resource) => resource.tags?.includes("student") || resource.audience?.includes("students")).slice(0, 6);
   const studentEvents = events.filter((event) => event.audience.includes("students")).slice(0, 3);
   const studentGrants = grants.filter((grant) => grant.bestFor.includes("students") || grant.clubEligible).slice(0, 3);
 
@@ -35,6 +39,9 @@ export default function StudentsFamiliesPage() {
         title="The strongest section for school-age residents and caregivers."
         description="This mini-hub keeps student needs inside the broader community system: tutoring, food, mental health, devices, clubs, volunteering, events, STEM/CTE, and school funding."
       >
+        <div className="mb-3">
+          <LocationProfileSelector />
+        </div>
         <div className="flex flex-wrap gap-3">
           <ButtonLink to="/resources?category=student-family" icon="BookOpenCheck">Find tutoring or academic help</ButtonLink>
           <ButtonLink to="/resources?category=mental-health" variant="outline" icon="HeartPulse">Find mental health and family support</ButtonLink>

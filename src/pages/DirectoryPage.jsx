@@ -3,14 +3,17 @@ import { useSearchParams } from "react-router-dom";
 import ResourceCard from "../components/ResourceCard.jsx";
 import ResourceFilters from "../components/ResourceFilters.jsx";
 import useLocalStorage from "../components/useLocalStorage.js";
+import LocationProfileSelector from "../components/LocationProfileSelector.jsx";
+import useActiveProfile from "../components/useActiveProfile.js";
 import { PageHeader, EmptyState, ButtonLink } from "../components/UI.jsx";
 import { getResources } from "../services/resourceProvider";
 import { filterResources, sortResources } from "../utils/resourceUtils";
 
 export default function DirectoryPage() {
   const [searchParams] = useSearchParams();
+  const profile = useActiveProfile();
   const [savedIds, setSavedIds] = useLocalStorage("cc-saved-resources", []);
-  const resources = getResources();
+  const resources = getResources({}, profile.id);
   const [filters, setFilters] = useState({
     query: searchParams.get("q") ?? "",
     category: searchParams.get("category") ?? "",
@@ -37,6 +40,9 @@ export default function DirectoryPage() {
         title="Search local help by need, cost, urgency, audience, and access."
         description="Use filters to narrow food assistance, tutoring, mental health support, transit, senior services, student programs, and volunteer resources."
       >
+        <div className="mb-3">
+          <LocationProfileSelector />
+        </div>
         <div className="grid gap-3 md:grid-cols-[1fr_220px]">
           <label className="sr-only" htmlFor="directory-search">Search resources</label>
           <input

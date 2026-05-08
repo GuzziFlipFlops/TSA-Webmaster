@@ -3,14 +3,17 @@ import { useSearchParams } from "react-router-dom";
 import GrantCard from "../components/GrantCard.jsx";
 import GrantFilters from "../components/GrantFilters.jsx";
 import useLocalStorage from "../components/useLocalStorage.js";
+import LocationProfileSelector from "../components/LocationProfileSelector.jsx";
+import useActiveProfile from "../components/useActiveProfile.js";
 import { ButtonLink, EmptyState, PageHeader } from "../components/UI.jsx";
 import { getGrants } from "../services/grantProvider";
 import { filterGrants, sortGrants } from "../utils/grantUtils";
 
 export default function FundingDirectoryPage() {
   const [searchParams] = useSearchParams();
+  const profile = useActiveProfile();
   const [savedIds, setSavedIds] = useLocalStorage("cc-saved-grants", []);
-  const grants = getGrants();
+  const grants = getGrants({}, profile.id);
   const [filters, setFilters] = useState({
     query: searchParams.get("q") ?? "",
     category: searchParams.get("category") ?? "",
@@ -37,6 +40,9 @@ export default function FundingDirectoryPage() {
         title="Search school, club, teacher, youth, nonprofit, and community project funding."
         description="Every card shows eligibility, sponsor requirements, amount, deadline type, official source, and verified date. Sample/demo opportunities are visibly labeled."
       >
+        <div className="mb-3">
+          <LocationProfileSelector />
+        </div>
         <div className="grid gap-3 md:grid-cols-[1fr_220px]">
           <label className="sr-only" htmlFor="grant-search">Search funding</label>
           <input

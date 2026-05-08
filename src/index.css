@@ -43,7 +43,23 @@
   font-synthesis: none;
   text-rendering: optimizeLegibility;
   -webkit-font-smoothing: antialiased;
-  --focus-ring: #0f766e;
+  --cc-bg: #f6f3ed;
+  --cc-bg-soft: #fffdf8;
+  --cc-surface: #ffffff;
+  --cc-elevated: #ffffff;
+  --cc-card: #ffffff;
+  --cc-text: #10202f;
+  --cc-muted: rgba(16, 32, 47, 0.68);
+  --cc-border: #d8e1df;
+  --cc-primary: #0f766e;
+  --cc-primary-text: #ffffff;
+  --cc-accent: #b7791f;
+  --cc-danger: #be123c;
+  --cc-success: #047857;
+  --cc-badge-bg: #eef8f6;
+  --cc-input: #ffffff;
+  --cc-map-panel: #ffffff;
+  --focus-ring: var(--cc-primary);
 }
 
 html {
@@ -56,14 +72,31 @@ body {
   background:
     radial-gradient(circle at top left, rgba(15, 118, 110, 0.12), transparent 28rem),
     linear-gradient(180deg, #fffdf8 0%, #f6f3ed 42%, #eef5f2 100%);
+  color: var(--cc-text);
 }
 
 body.dark-mode {
+  --cc-bg: #0b1220;
+  --cc-bg-soft: #101827;
+  --cc-surface: #111c2e;
+  --cc-elevated: #172438;
+  --cc-card: #111c2e;
+  --cc-text: #e7f2f0;
+  --cc-muted: rgba(231, 242, 240, 0.72);
+  --cc-border: #314155;
+  --cc-primary: #5eead4;
+  --cc-primary-text: #082f2c;
+  --cc-accent: #f8c96a;
+  --cc-danger: #fda4af;
+  --cc-success: #86efac;
+  --cc-badge-bg: #172438;
+  --cc-input: #0f1a2b;
+  --cc-map-panel: #111c2e;
   background:
     radial-gradient(circle at top left, rgba(45, 212, 191, 0.14), transparent 28rem),
     linear-gradient(180deg, #0b1220 0%, #101827 48%, #0b1320 100%) !important;
-  color: #e7f2f0;
-  --focus-ring: #5eead4;
+  color: var(--cc-text);
+  --focus-ring: var(--cc-primary);
 }
 
 body.dark-mode header,
@@ -186,6 +219,33 @@ body.dark-mode .leaflet-container {
   filter: saturate(0.85) brightness(0.82) contrast(1.08);
 }
 
+body.dark-mode .btn-secondary,
+body.dark-mode .field,
+body.dark-mode input,
+body.dark-mode select,
+body.dark-mode textarea,
+body.dark-mode .leaflet-popup-content-wrapper {
+  background-color: var(--cc-input) !important;
+  color: var(--cc-text) !important;
+  border-color: var(--cc-border) !important;
+}
+
+body.dark-mode .btn-primary {
+  background-color: var(--cc-primary) !important;
+  color: var(--cc-primary-text) !important;
+}
+
+body.dark-mode footer,
+body.dark-mode .bg-ink {
+  background-color: #07111f !important;
+}
+
+body.dark-mode .map-grid {
+  background-image:
+    linear-gradient(rgba(94, 234, 212, 0.12) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(94, 234, 212, 0.12) 1px, transparent 1px);
+}
+
 body.large-text {
   font-size: 19px;
 }
@@ -216,6 +276,22 @@ body.large-text .text-lg {
 }
 
 body.high-contrast {
+  --cc-bg: #ffffff;
+  --cc-bg-soft: #ffffff;
+  --cc-surface: #ffffff;
+  --cc-elevated: #ffffff;
+  --cc-card: #ffffff;
+  --cc-text: #000000;
+  --cc-muted: #000000;
+  --cc-border: #000000;
+  --cc-primary: #000000;
+  --cc-primary-text: #ffffff;
+  --cc-accent: #000000;
+  --cc-danger: #000000;
+  --cc-success: #000000;
+  --cc-badge-bg: #ffffff;
+  --cc-input: #ffffff;
+  --cc-map-panel: #ffffff;
   background: #fff !important;
   color: #000 !important;
   --focus-ring: #000;
@@ -274,6 +350,17 @@ body.high-contrast [class*="text-green"] {
 
 body.high-contrast [class*="ring-"] {
   --tw-ring-color: #000 !important;
+}
+
+body.high-contrast .btn-secondary,
+body.high-contrast .field,
+body.high-contrast input,
+body.high-contrast select,
+body.high-contrast textarea,
+body.high-contrast .leaflet-popup-content-wrapper {
+  background-color: var(--cc-input) !important;
+  color: var(--cc-text) !important;
+  border-color: var(--cc-border) !important;
 }
 
 body.reduced-motion * {

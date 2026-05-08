@@ -1,10 +1,13 @@
 import { useState } from "react";
 import { siteConfig } from "../data/siteConfig";
 import { geocodeLocation } from "../services/geocodeProvider";
-import { defaultCommunityLocation } from "../services/locationUtils";
+import { getDefaultLocation } from "../services/locationUtils";
 import Icon from "./Icon.jsx";
+import useActiveProfile from "./useActiveProfile";
 
 export default function LocationSearch({ onLocationChange }) {
+  const profile = useActiveProfile();
+  const defaultLocation = getDefaultLocation(profile.id);
   const [input, setInput] = useState("");
   const [status, setStatus] = useState("");
   const [busy, setBusy] = useState(false);
@@ -12,10 +15,10 @@ export default function LocationSearch({ onLocationChange }) {
   async function handleSubmit(event) {
     event.preventDefault();
     setStatus("");
-    const result = await geocodeLocation(input);
+    const result = await geocodeLocation(input, profile.id);
     if (!result) {
-      setStatus("We could not match that city or ZIP in the local demo lookup. Showing the configured community center instead.");
-      onLocationChange(defaultCommunityLocation);
+      setStatus("That city or ZIP is not in the local demo lookup yet. Showing the configured community center instead.");
+      onLocationChange(defaultLocation);
       return;
     }
     onLocationChange(result);
@@ -25,7 +28,7 @@ export default function LocationSearch({ onLocationChange }) {
   function useBrowserLocation() {
     if (!navigator.geolocation) {
       setStatus("Geolocation is not available in this browser. Showing the configured community center instead.");
-      onLocationChange(defaultCommunityLocation);
+      onLocationChange(defaultLocation);
       return;
     }
     setBusy(true);
@@ -42,7 +45,7 @@ export default function LocationSearch({ onLocationChange }) {
       },
       () => {
         setStatus("Location permission was denied or unavailable. Showing the configured community center instead.");
-        onLocationChange(defaultCommunityLocation);
+        onLocationChange(defaultLocation);
         setBusy(false);
       },
       { enableHighAccuracy: false, timeout: 8000, maximumAge: 300000 }
@@ -51,8 +54,8 @@ export default function LocationSearch({ onLocationChange }) {
 
   function resetLocation() {
     setInput("");
-    setStatus(`Reset to ${defaultCommunityLocation.label}.`);
-    onLocationChange(defaultCommunityLocation);
+    setStatus(`Reset to ${defaultLocation.label}.`);
+    onLocationChange(defaultLocation);
   }
 
   return (
@@ -64,7 +67,7 @@ export default function LocationSearch({ onLocationChange }) {
             value={input}
             onChange={(event) => setInput(event.target.value)}
             className="field"
-            placeholder={`${siteConfig.city}, ZIP, or neighborhood`}
+            placeholder={`${profile.city}, ${profile.primaryZip}, or nearby ZIP`}
           />
         </label>
         <button type="submit" className="btn-primary">

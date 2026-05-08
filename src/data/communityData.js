@@ -16,7 +16,7 @@ export const communityProfile = {
     { label: "Accessibility modes", value: "3" }
   ],
   coordinates: siteConfig.centerCoordinates,
-  neighborhoods: ["Annandale", "Centreville", "Fairfax", "Falls Church", "Herndon", "Reston", "Springfield", "Vienna"]
+  neighborhoods: ["Middletown", "New Castle County", "National Harbor", "Oxon Hill", "Alexandria", "Washington DC"]
 };
 
 export const categories = [
