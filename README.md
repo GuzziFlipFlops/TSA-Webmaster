@@ -27,6 +27,8 @@ npm run build
 npm run preview
 ```
 
+Use `npm run dev` or a Vercel deployment when testing live Grants.gov search. `npm run preview` serves the static build only and does not run the local Vite proxy or Vercel serverless function.
+
 ## Vercel Deployment
 
 Connect this GitHub repo to Vercel and use the default Vite settings:
@@ -44,6 +46,7 @@ The current build uses a curated local dataset. No live API keys are required.
 - Resources, grants, events, ZIP lookup, and map pins are locally maintained records.
 - Leaflet displays OpenStreetMap map tiles.
 - The map includes a national STEM/maker atlas layer imported from the provided resource files, with a 50-state selector and ZIP-to-state lookup.
+- Funding search can optionally include live Grants.gov results through `/api/grants-gov`.
 - Browser geolocation is used only after the user clicks **Use my location**.
 - Location is used only in the browser to sort nearby local records.
 - Listings include `sourceUrl`, `verifiedDate`, `isSample`, `dataStatus`, `serviceArea`, and `coordinatesApproximate`.
@@ -53,12 +56,13 @@ Future APIs should be added through the provider layer, not directly in page com
 
 - `src/services/resourceProvider.js`
 - `src/services/grantProvider.js`
+- `src/services/grantsGovProvider.js`
 - `src/services/eventProvider.js`
 - `src/services/geocodeProvider.js`
 - `src/services/locationUtils.js`
 - `src/services/apiStatus.js`
 
-Potential future sources include 211, Google Places, Grants.gov, OpenStreetMap/Nominatim, and Delaware/Maryland open data portals. These are not required for the local-data build.
+Potential future sources include 211, Google Places, OpenStreetMap/Nominatim, and Delaware/Maryland open data portals. Grants.gov live search is available through a Vercel serverless proxy and does not require an API key.
 
 ## Location Profiles
 

@@ -1,4 +1,5 @@
 import { fundingCategories } from "../data/communityData";
+import { GRANTS_GOV_CATEGORY_OPTIONS, GRANTS_GOV_ELIGIBILITY_OPTIONS, GRANTS_GOV_STATUS_OPTIONS } from "../services/grantsGovProvider";
 import { titleCase } from "../utils/resourceUtils";
 
 const bestForOptions = [
@@ -21,12 +22,49 @@ export default function GrantFilters({ filters, setFilters, savedCount = 0 }) {
         <button
           type="button"
           className="text-sm font-bold text-honey hover:text-amber-800"
-          onClick={() => setFilters({ query: "", category: "", bestFor: "", difficulty: "", scope: "", sort: "best" })}
+          onClick={() => setFilters({ query: "", category: "", bestFor: "", difficulty: "", scope: "", sort: "best", source: "curated", grantsGovCategory: "ED|ST", grantsGovEligibility: "05|06|12|13|20|25", grantsGovStatus: "posted|forecasted" })}
         >
           Clear
         </button>
       </div>
       <div className="mt-4 grid gap-4">
+        <label className="grid gap-1 text-sm font-bold">
+          Source
+          <select value={filters.source ?? "curated"} onChange={(event) => update("source", event.target.value)} className="rounded-lg border border-slateLine bg-white px-3 py-2 font-medium">
+            <option value="curated">Curated local + spreadsheet data</option>
+            <option value="all">Curated + live Grants.gov</option>
+            <option value="grants-gov">Live Grants.gov only</option>
+          </select>
+        </label>
+        {(filters.source === "all" || filters.source === "grants-gov") ? (
+          <div className="grid gap-3 rounded-lg border border-amber-200 bg-amber-50 p-3">
+            <p className="text-xs font-black uppercase tracking-[0.14em] text-honey">Live Grants.gov filters</p>
+            <label className="grid gap-1 text-sm font-bold">
+              Federal category
+              <select value={filters.grantsGovCategory ?? "ED|ST"} onChange={(event) => update("grantsGovCategory", event.target.value)} className="rounded-lg border border-slateLine bg-white px-3 py-2 font-medium">
+                {GRANTS_GOV_CATEGORY_OPTIONS.map((option) => (
+                  <option key={option.value} value={option.value}>{option.label}</option>
+                ))}
+              </select>
+            </label>
+            <label className="grid gap-1 text-sm font-bold">
+              Federal eligibility
+              <select value={filters.grantsGovEligibility ?? "05|06|12|13|20|25"} onChange={(event) => update("grantsGovEligibility", event.target.value)} className="rounded-lg border border-slateLine bg-white px-3 py-2 font-medium">
+                {GRANTS_GOV_ELIGIBILITY_OPTIONS.map((option) => (
+                  <option key={option.value} value={option.value}>{option.label}</option>
+                ))}
+              </select>
+            </label>
+            <label className="grid gap-1 text-sm font-bold">
+              Opportunity status
+              <select value={filters.grantsGovStatus ?? "posted|forecasted"} onChange={(event) => update("grantsGovStatus", event.target.value)} className="rounded-lg border border-slateLine bg-white px-3 py-2 font-medium">
+                {GRANTS_GOV_STATUS_OPTIONS.map((option) => (
+                  <option key={option.value} value={option.value}>{option.label}</option>
+                ))}
+              </select>
+            </label>
+          </div>
+        ) : null}
         <label className="grid gap-1 text-sm font-bold">
           Category
           <select value={filters.category ?? ""} onChange={(event) => update("category", event.target.value)} className="rounded-lg border border-slateLine bg-white px-3 py-2 font-medium">

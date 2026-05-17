@@ -24,6 +24,7 @@ export default function GrantCard({ grant, saved = false, onToggleSave, compact 
             <FundingAmountBadge grant={grant} />
             <DeadlineBadge grant={grant} />
             <GrantStatusPill grant={grant} />
+            {grant.dataStatus === "live-api" ? <Badge color="blue">Live Grants.gov</Badge> : null}
             {!isSample && grant.dataStatus === "needs-review" ? <Badge color="amber">Needs review</Badge> : null}
             {!isSample && grant.dataStatus === "verified" ? <Badge color="green">Verified source</Badge> : null}
           </div>

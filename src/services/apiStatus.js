@@ -3,7 +3,7 @@ export const apiStatus = {
   compact:
     "Curated local and national records - Map tiles by OpenStreetMap - Listings are locally maintained unless live data is connected.",
   current:
-    "Current version uses curated local and national records. No 211, Google Places, Grants.gov, or live government API key is required.",
+    "Current version uses curated local and national records, plus optional live Grants.gov search. No 211, Google Places, Grants.gov, or live government API key is required.",
   map:
     "Leaflet renders OpenStreetMap map tiles. Resource pins come from local service-area data, not live place search.",
   geolocation:
@@ -11,7 +11,7 @@ export const apiStatus = {
   futureApis: [
     "211 National Data Platform: best for social/community services, but requires developer access and authorization keys.",
     "Google Places API: good for place search/geocoding, but requires API key/billing and should be proxied through serverless functions.",
-    "Grants.gov API: useful for federal grants, but not ideal for local school club sponsorships.",
+    "Grants.gov API: useful for optional live federal funding search; it is proxied through /api/grants-gov because direct browser requests are blocked by CORS.",
     "OpenStreetMap/Nominatim: useful for geocoding, but public endpoints have usage limits and should not be hammered.",
     "Delaware/Maryland open data portals: possible dataset sources after specific datasets are selected."
   ]

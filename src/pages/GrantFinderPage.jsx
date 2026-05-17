@@ -1,9 +1,10 @@
-import { useMemo, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 import GrantCard from "../components/GrantCard.jsx";
 import LocationProfileSelector from "../components/LocationProfileSelector.jsx";
 import useActiveProfile from "../components/useActiveProfile.js";
 import { ButtonLink, InfoPanel, PageHeader } from "../components/UI.jsx";
 import { getGrants } from "../services/grantProvider";
+import { buildGrantsGovKeywordFromAnswers, searchGrantsGov } from "../services/grantsGovProvider";
 import { grantQuizOptions, scoreGrant } from "../utils/grantUtils";
 
 const steps = [
@@ -11,6 +12,15 @@ const steps = [
     key: "applicant",
     question: "Who is applying?",
     options: grantQuizOptions.applicant.map((option) => [option.id, option.label])
+  },
+  {
+    key: "source",
+    question: "Which funding sources should the finder use?",
+    options: [
+      ["curated", "Curated school/community funding only"],
+      ["both", "Curated funding + live Grants.gov"],
+      ["federal", "Live Grants.gov federal opportunities only"]
+    ]
   },
   {
     key: "project",
@@ -71,18 +81,65 @@ const steps = [
 
 export default function GrantFinderPage() {
   const profile = useActiveProfile();
-  const grants = getGrants({ includeNational: true }, profile.id);
+  const curatedGrants = getGrants({ includeNational: true }, profile.id);
+  const [liveGrants, setLiveGrants] = useState([]);
+  const [liveStatus, setLiveStatus] = useState("");
+  const [liveLoading, setLiveLoading] = useState(false);
   const [answers, setAnswers] = useState({});
   const stepIndex = Object.keys(answers).length;
   const currentStep = steps[stepIndex];
   const done = stepIndex >= steps.length;
+  const shouldSearchGrantsGov = done && (answers.source === "both" || answers.source === "federal");
+
+  useEffect(() => {
+    if (!shouldSearchGrantsGov) {
+      setLiveGrants([]);
+      setLiveStatus("");
+      return;
+    }
+
+    let cancelled = false;
+    setLiveLoading(true);
+    setLiveStatus("Searching live Grants.gov opportunities for this project...");
+    searchGrantsGov({
+      keyword: buildGrantsGovKeywordFromAnswers(answers),
+      fundingCategories: answers.project === "art" ? "AR|ED" : answers.project === "environment" ? "ENV|ED|ST" : "ED|ST",
+      eligibilities: answers.applicant === "nonprofits" ? "12|13" : answers.applicant === "students" ? "05|06|12|13|20|25" : "05|06|12|13|20|25",
+      oppStatuses: answers.timing === "flexible" ? "posted|forecasted" : "posted",
+      rows: 20
+    })
+      .then((results) => {
+        if (cancelled) return;
+        setLiveGrants(results);
+        setLiveStatus(`${results.length} live Grants.gov opportunities loaded.`);
+      })
+      .catch((error) => {
+        if (cancelled) return;
+        setLiveGrants([]);
+        setLiveStatus(`Live Grants.gov search is unavailable right now. ${error.message}`);
+      })
+      .finally(() => {
+        if (!cancelled) setLiveLoading(false);
+      });
+
+    return () => {
+      cancelled = true;
+    };
+  }, [answers, shouldSearchGrantsGov]);
+
+  const grants = useMemo(() => {
+    if (answers.source === "federal") return liveGrants;
+    if (answers.source === "both") return [...curatedGrants, ...liveGrants];
+    return curatedGrants;
+  }, [answers.source, curatedGrants, liveGrants]);
+
   const results = useMemo(() => {
     if (!done) return [];
     return grants
       .map((grant) => scoreGrant(grant, answers))
       .filter((result) => result.score > 0)
       .sort((a, b) => b.score - a.score)
-      .slice(0, 6);
+      .slice(0, 9);
   }, [answers, done, grants]);
 
   return (
@@ -131,6 +188,11 @@ export default function GrantFinderPage() {
                   Start over
                 </button>
               </div>
+              {shouldSearchGrantsGov ? (
+                <p className="mt-4 rounded-lg border border-amber-200 bg-amber-50 px-4 py-3 text-sm font-bold text-ink/72" role="status">
+                  {liveStatus} {liveLoading ? "This may take a moment." : ""}
+                </p>
+              ) : null}
               <div className="mt-6 grid gap-5">
                 {results.map(({ grant, reasons }) => (
                   <div key={grant.id}>
