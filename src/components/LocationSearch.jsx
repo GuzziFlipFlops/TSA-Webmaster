@@ -17,12 +17,12 @@ export default function LocationSearch({ onLocationChange }) {
     setStatus("");
     const result = await geocodeLocation(input, profile.id);
     if (!result) {
-      setStatus("That city or ZIP is not in the local lookup yet. Showing the configured community center instead.");
+      setStatus("That city, state, or ZIP is not in the local lookup yet. Showing the configured community center instead.");
       onLocationChange(defaultLocation);
       return;
     }
     onLocationChange(result);
-    setStatus(`Sorting nearby resources from ${result.label}.`);
+    setStatus(result.state ? `Showing ${result.stateName} resources from ${result.label}.` : `Sorting nearby resources from ${result.label}.`);
   }
 
   function useBrowserLocation() {
@@ -67,7 +67,7 @@ export default function LocationSearch({ onLocationChange }) {
             value={input}
             onChange={(event) => setInput(event.target.value)}
             className="field"
-            placeholder={`${profile.city}, ${profile.primaryZip}, or nearby ZIP`}
+            placeholder={`${profile.city}, ${profile.primaryZip}, California, or 90210`}
           />
         </label>
         <button type="submit" className="btn-primary">

@@ -71,7 +71,7 @@ const steps = [
 
 export default function GrantFinderPage() {
   const profile = useActiveProfile();
-  const grants = getGrants({}, profile.id);
+  const grants = getGrants({ includeNational: true }, profile.id);
   const [answers, setAnswers] = useState({});
   const stepIndex = Object.keys(answers).length;
   const currentStep = steps[stepIndex];

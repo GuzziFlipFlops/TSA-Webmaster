@@ -1,9 +1,9 @@
 export const apiStatus = {
   dataLabel: "Curated local dataset",
   compact:
-    "Curated local records - Map tiles by OpenStreetMap - Listings are locally maintained unless live data is connected.",
+    "Curated local and national records - Map tiles by OpenStreetMap - Listings are locally maintained unless live data is connected.",
   current:
-    "Current version uses curated local records. No 211, Google Places, Grants.gov, or live government API key is required.",
+    "Current version uses curated local and national records. No 211, Google Places, Grants.gov, or live government API key is required.",
   map:
     "Leaflet renders OpenStreetMap map tiles. Resource pins come from local service-area data, not live place search.",
   geolocation:

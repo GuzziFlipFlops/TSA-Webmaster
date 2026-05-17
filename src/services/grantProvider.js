@@ -1,4 +1,5 @@
 import { getProfileById } from "../data/locationProfiles";
+import { nationalFundingLeads } from "../data/nationalFunding";
 import { filterGrants, sortGrants } from "../utils/grantUtils";
 import { getActiveProfile } from "./resourceProvider";
 
@@ -14,14 +15,20 @@ export function normalizeGrant(grant, profile = getActiveProfile()) {
     verifiedDate: grant.verifiedDate ?? profile.lastUpdated,
     dataStatus,
     serviceArea: grant.serviceArea ?? profile.serviceAreaLabel,
+    state: grant.state ?? "",
+    stateName: grant.stateName ?? "",
     coordinatesApproximate: grant.coordinatesApproximate ?? false,
-    profileId: profile.id
+    profileId: grant.profileId ?? profile.id
   };
 }
 
 export function getGrants(filters = {}, profileId = getActiveProfile().id) {
   const profile = getProfileById(profileId);
-  const normalized = profile.grants.map((grant) => normalizeGrant(grant, profile));
+  const profileGrants = profile.grants.map((grant) => normalizeGrant(grant, profile));
+  const nationalGrants = filters.includeNational
+    ? nationalFundingLeads.map((grant) => normalizeGrant({ ...grant, profileId: "national-funding" }, profile))
+    : [];
+  const normalized = [...profileGrants, ...nationalGrants];
   return sortGrants(filterGrants(normalized, filters), filters.sort ?? "best", filters.query ?? "");
 }
 

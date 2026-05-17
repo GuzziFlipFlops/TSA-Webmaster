@@ -43,6 +43,7 @@ The current build uses a curated local dataset. No live API keys are required.
 
 - Resources, grants, events, ZIP lookup, and map pins are locally maintained records.
 - Leaflet displays OpenStreetMap map tiles.
+- The map includes a national STEM/maker atlas layer imported from the provided resource files, with a 50-state selector and ZIP-to-state lookup.
 - Browser geolocation is used only after the user clicks **Use my location**.
 - Location is used only in the browser to sort nearby local records.
 - Listings include `sourceUrl`, `verifiedDate`, `isSample`, `dataStatus`, `serviceArea`, and `coordinatesApproximate`.
@@ -72,6 +73,9 @@ Profile files live in:
 - `src/data/locationProfiles/nationalHarborMD.js`
 - `src/data/locationProfiles/index.js`
 - `src/data/locationLookup.js`
+- `src/data/usStates.js`
+- `src/data/nationalResources.js`
+- `src/data/nationalFunding.js`
 
 To customize for the actual school community, edit or add a profile with local resources, grants, events, citations, ZIP codes, and center coordinates.
 

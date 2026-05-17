@@ -8,6 +8,7 @@ export const nationalHarborMDProfile = {
   communityName: "TSA Nationals Service Area",
   city: "National Harbor",
   state: "Maryland",
+  stateCode: "MD",
   primaryZip: "20745",
   serviceAreaLabel: serviceArea,
   center: { lat: 38.7807, lng: -77.016 },

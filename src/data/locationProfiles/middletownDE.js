@@ -8,6 +8,7 @@ export const middletownDEProfile = {
   communityName: "Middletown Community",
   city: "Middletown",
   state: "Delaware",
+  stateCode: "DE",
   primaryZip: "19709",
   serviceAreaLabel: serviceArea,
   center: { lat: 39.48923, lng: -75.68314 },

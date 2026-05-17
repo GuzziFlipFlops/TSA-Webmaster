@@ -13,7 +13,7 @@ export default function FundingDirectoryPage() {
   const [searchParams] = useSearchParams();
   const profile = useActiveProfile();
   const [savedIds, setSavedIds] = useLocalStorage("cc-saved-grants", []);
-  const grants = getGrants({}, profile.id);
+  const grants = getGrants({ includeNational: true }, profile.id);
   const [filters, setFilters] = useState({
     query: searchParams.get("q") ?? "",
     category: searchParams.get("category") ?? "",
@@ -28,7 +28,7 @@ export default function FundingDirectoryPage() {
     sort: "best"
   });
 
-  const filtered = useMemo(() => sortGrants(filterGrants(grants, { ...filters, savedIds }), filters.sort, filters.query), [filters, savedIds]);
+  const filtered = useMemo(() => sortGrants(filterGrants(grants, { ...filters, savedIds }), filters.sort, filters.query), [filters, grants, savedIds]);
   const toggleSave = (id) =>
     setSavedIds((current) => (current.includes(id) ? current.filter((savedId) => savedId !== id) : [...current, id]));
 

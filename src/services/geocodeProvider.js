@@ -1,5 +1,6 @@
 import { profileLocationLookup } from "../data/locationLookup";
 import { defaultProfileId, getProfileById } from "../data/locationProfiles";
+import { stateFromLocationText } from "../data/usStates";
 import { getDefaultLocation } from "./locationUtils";
 
 function normalizeQuery(input) {
@@ -41,6 +42,17 @@ export async function geocodeLocation(input, profileId = defaultProfileId) {
 
   const cityMatch = Object.keys(lookup).find((key) => normalized.includes(key));
   if (cityMatch) return lookup[cityMatch];
+
+  const state = stateFromLocationText(input);
+  if (state) {
+    return {
+      label: `${state.name} resource area`,
+      coordinates: state.center,
+      state: state.code,
+      stateName: state.name,
+      isNationalLookup: true
+    };
+  }
 
   // TODO: A future provider could connect Nominatim or Google Geocoding.
   // Keep this local-only so it never pretends to search the internet.

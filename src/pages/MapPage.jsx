@@ -9,6 +9,7 @@ import { Badge, EmptyState, PageHeader } from "../components/UI.jsx";
 import { getMappableResources } from "../services/resourceProvider";
 import { formatDistance, getDefaultLocation } from "../services/locationUtils";
 import { hubPillars } from "../data/communityData";
+import { getStateByCode, US_STATES } from "../data/usStates";
 import { filterResources, getResourcePillar } from "../utils/resourceUtils";
 
 const mappedPillars = ["learning-resource", "support-service", "club-opportunity", "volunteer-opportunity", "career-opportunity"];
@@ -19,20 +20,34 @@ export default function MapPage() {
   const [selectedId, setSelectedId] = useState("");
   const [query, setQuery] = useState("");
   const [location, setLocation] = useState(() => getDefaultLocation(profile.id));
+  const [stateFilter, setStateFilter] = useState("");
 
   useEffect(() => {
     setLocation(getDefaultLocation(profile.id));
   }, [profile.id]);
 
+  const stateInfo = getStateByCode(stateFilter);
+  const mapCenter = stateInfo?.center ?? location.coordinates;
+  const mapZoom = stateInfo ? 6 : 12;
+
   const filtered = useMemo(() => {
-    const base = getMappableResources({ location: location.coordinates }, profile.id);
+    const base = getMappableResources({ includeNational: true, location: mapCenter, state: stateFilter }, profile.id);
     return filterResources(base, { query }).filter((resource) => {
       if (!pillar) return mappedPillars.includes(getResourcePillar(resource));
       return getResourcePillar(resource) === pillar;
     });
-  }, [location, pillar, profile.id, query]);
+  }, [mapCenter, pillar, profile.id, query, stateFilter]);
+
+  useEffect(() => {
+    setSelectedId("");
+  }, [pillar, query, stateFilter, profile.id]);
 
   const selected = filtered.find((resource) => resource.id === selectedId) ?? filtered[0];
+
+  function handleLocationChange(nextLocation) {
+    setLocation(nextLocation);
+    if (nextLocation.state) setStateFilter(nextLocation.state);
+  }
 
   return (
     <>
@@ -46,7 +61,28 @@ export default function MapPage() {
             <LocationProfileSelector />
             <DataStatus className="flex-1" />
           </div>
-          <LocationSearch onLocationChange={setLocation} />
+          <LocationSearch onLocationChange={handleLocationChange} />
+          <div className="rounded-lg border border-slateLine bg-white p-4 shadow-sm">
+            <label className="grid gap-1 text-sm font-black">
+              Filter national resources by state
+              <select
+                value={stateFilter}
+                onChange={(event) => setStateFilter(event.target.value)}
+                className="field"
+                aria-label="Select a U.S. state for mapped resources"
+              >
+                <option value="">All 50 states plus current service area</option>
+                {US_STATES.map((state) => (
+                  <option key={state.code} value={state.code}>
+                    {state.name}
+                  </option>
+                ))}
+              </select>
+            </label>
+            <p className="mt-2 text-xs font-semibold text-ink/58">
+              ZIP searches route to the matching state when the ZIP prefix is in the local U.S. lookup. National atlas pins use approximate city or state coordinates when exact coordinates are not provided.
+            </p>
+          </div>
           <input
             value={query}
             onChange={(event) => setQuery(event.target.value)}
@@ -59,8 +95,10 @@ export default function MapPage() {
       <section className="cc-container py-10">
         <div className="mb-4 flex flex-col gap-3 lg:flex-row lg:items-center lg:justify-between">
           <div>
-            <p className="font-black">Mapped resources from curated local records</p>
-            <p className="mt-1 text-sm text-ink/60">Sorted from {location.label}. Grants and online-only listings are excluded.</p>
+            <p className="font-black">Mapped resources from curated local and national records</p>
+            <p className="mt-1 text-sm text-ink/60">
+              {stateInfo ? `Showing ${stateInfo.name} resources.` : `Sorted from ${location.label}. Zoom out to see national atlas pins.`} Grants and online-only listings are excluded.
+            </p>
           </div>
           <div className="flex flex-wrap gap-2" aria-label="Map pillar filters">
             <button className={`rounded-md px-3 py-2 text-sm font-black ${pillar === "" ? "bg-ink text-white" : "border border-slateLine bg-white"}`} onClick={() => setPillar("")}>
@@ -80,7 +118,7 @@ export default function MapPage() {
         {filtered.length ? (
           <div className="grid gap-5 lg:grid-cols-[1fr_360px]">
             <div className="h-[62vh] min-h-[480px] overflow-hidden rounded-lg border border-slateLine bg-white shadow-soft">
-              <ResourceMap resources={filtered} selectedId={selected?.id} onSelect={setSelectedId} center={location.coordinates} zoom={12} />
+              <ResourceMap resources={filtered} selectedId={selectedId} onSelect={setSelectedId} center={mapCenter} zoom={mapZoom} />
             </div>
             <aside className="max-h-[62vh] min-h-[480px] overflow-auto rounded-lg border border-slateLine bg-white p-4 shadow-sm">
               <div className="sticky top-0 z-10 bg-white pb-3">

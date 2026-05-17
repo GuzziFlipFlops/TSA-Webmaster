@@ -1,4 +1,5 @@
 import { defaultProfileId, getProfileById } from "../data/locationProfiles";
+import { nationalStemResources } from "../data/nationalResources";
 import { filterResources, getResourcePillar, isLocationBasedResource } from "../utils/resourceUtils";
 import { sortByDistance, withDistance } from "./locationUtils";
 
@@ -34,15 +35,21 @@ export function normalizeResource(resource, profile = getActiveProfile()) {
     sampleData: isSample,
     dataStatus,
     serviceArea: resource.serviceArea ?? profile.serviceAreaLabel,
+    state: resource.state ?? profile.stateCode ?? "",
+    stateName: resource.stateName ?? profile.state ?? "",
     coordinatesApproximate: resource.coordinatesApproximate ?? true,
-    profileId: profile.id,
+    profileId: resource.profileId ?? profile.id,
     pillar: getResourcePillar(resource)
   };
 }
 
 export function getResources(filters = {}, profileId = getActiveProfile().id) {
   const profile = getProfileById(profileId);
-  const normalized = profile.resources.map((resource) => normalizeResource(resource, profile));
+  const profileResources = profile.resources.map((resource) => normalizeResource(resource, profile));
+  const nationalResources = filters.includeNational
+    ? nationalStemResources.map((resource) => normalizeResource({ ...resource, profileId: "national-atlas" }, profile))
+    : [];
+  const normalized = [...profileResources, ...nationalResources];
   const filtered = filterResources(normalized, {
     query: filters.query ?? "",
     category: filters.category ?? "",
@@ -58,6 +65,7 @@ export function getResources(filters = {}, profileId = getActiveProfile().id) {
     savedIds: filters.savedIds
   }).filter((resource) => {
     if (filters.pillar && resource.pillar !== filters.pillar) return false;
+    if (filters.state && resource.state !== filters.state) return false;
     return true;
   });
 
